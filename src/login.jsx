@@ -1,7 +1,6 @@
 import React from 'react';
 import { Text, StyleSheet, TextInput, View, Button, TouchableOpacity } from 'react-native';
-
-function LoginView() {
+function LoginView({ navigation }) {
 
     const [username, onChangeUsername] = React.useState();
     return (
@@ -58,17 +57,26 @@ function LoginView() {
                 }
                 }
 
-                onPress={() => {
-                    alert("hello");
-                }}
+                onPress={() => navigation.navigate("Register")}
             >
                 No account? register!
             </Text>
+
+            <Button
+                title="Go to Details"
+                onPress={() => navigation.navigate('Register')}
+            />
         </View >
     );
 }
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
     textInput: {
         height: 40,
         margin: 12,
