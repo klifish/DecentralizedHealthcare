@@ -1,45 +1,61 @@
+import axios from 'axios';
 import React from 'react';
-import { Text, StyleSheet, TextInput, View, Button, TouchableOpacity } from 'react-native';
-function LoginView({ navigation }) {
+import { Text, Image, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+
+
+function LoginPage({ navigation }) {
 
     const [username, onChangeUsername] = React.useState();
+    const [password, onChangePassword] = React.useState();
     return (
-        <View>
-            <Text
-                style={{
-                    textAlign: "center"
-                }}
-            >
-                LUCE
-            </Text>
+        <View
+            style={styles.container}
+        >
+
+            <Image
+                style={
+                    styles.logo
+                }
+
+                source={
+                    require('../assets/luce.png')
+                }
+            />
+
+
             <TextInput
                 style={styles.textInput}
                 placeholder="Username: "
                 onChangeText={onChangeUsername}
-            // value={username}
             />
+
             <TextInput
                 style={styles.textInput}
                 placeholder="Password:"
+                onChangeText={onChangePassword}
             />
 
-            <TouchableOpacity
-                style={{
-                    padding: 10,
-                    margin: 12,
-                    marginRight: 40,
-                    marginLeft: 40,
-                    marginTop: 10,
-                    paddingTop: 10,
-                    paddingBottom: 10,
-                    backgroundColor: '#1E6738',
-                    borderRadius: 10,
-                    borderWidth: 1,
-                    borderColor: '#fff'
-                }}
-                onPress={() => {
-                    alert("hello");
-                }}>
+            <TouchableOpacity style={styles.touchableOpacityStyle} onPress={() => {
+
+                // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
+                //     alert("Empty username or password")
+                // }
+
+                navigation.navigate("Role")
+
+                // axios({
+                //     method: "post",
+                //     url: "/user/login",
+                //     data: {
+                //         username: username,
+                //         password: password
+                //     }
+                // })
+                //     .then(res => {
+                //         navigation.navigate("Role")
+                //     })
+                //     .catch(err => { })
+            }}>
                 <Text
                     style={{
                         color: '#fff',
@@ -48,24 +64,13 @@ function LoginView({ navigation }) {
                 >
                     Login
                 </Text>
+
             </TouchableOpacity>
 
-            <Text
-                style={{
-                    textDecorationLine: "underline",
-                    padding: 10
-                }
-                }
-
-                onPress={() => navigation.navigate("Register")}
+            <Text style={styles.text} onPress={() => navigation.navigate("Register")}
             >
                 No account? register!
             </Text>
-
-            <Button
-                title="Go to Details"
-                onPress={() => navigation.navigate('Register')}
-            />
         </View >
     );
 }
@@ -83,6 +88,29 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         padding: 10,
     },
+    text: {
+        textDecorationLine: "underline",
+        padding: 10
+    },
+
+    touchableOpacityStyle: {
+        padding: 10,
+        margin: 12,
+        marginRight: 40,
+        marginLeft: 40,
+        marginTop: 10,
+        paddingTop: 10,
+        paddingBottom: 10,
+        backgroundColor: '#1E6738',
+        borderRadius: 10,
+        borderWidth: 1,
+        borderColor: '#fff'
+    },
+
+    logo: {
+        width: 195,
+        height: 47
+    }
 });
 
-export default LoginView;
+export default LoginPage;
