@@ -1,6 +1,7 @@
-import axios from 'axios';
 import React from 'react';
 import { Text, Image, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+
+import service from './utils/request';
 
 
 function LoginPage({ navigation }) {
@@ -8,9 +9,9 @@ function LoginPage({ navigation }) {
     const [username, onChangeUsername] = React.useState();
     const [password, onChangePassword] = React.useState();
     return (
-        <View
-            style={styles.container}
-        >
+        <View style={
+            styles.container
+        }>
 
             <Image
                 style={
@@ -37,11 +38,26 @@ function LoginPage({ navigation }) {
 
             <TouchableOpacity style={styles.touchableOpacityStyle} onPress={() => {
 
-                // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
-                //     alert("Empty username or password")
-                // }
 
-                navigation.navigate("Role")
+
+                if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
+                    alert("Empty username or password")
+                }
+
+                var loginData = {
+                    "username": username,
+                    "password": password
+                }
+
+                // navigation.navigate("Role")
+
+                service.post(
+                    "/usr/login", {
+                    loginData
+                }
+                ).then(response => {
+                    console.log(response)
+                })
 
                 // axios({
                 //     method: "post",

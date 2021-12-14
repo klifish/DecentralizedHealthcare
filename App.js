@@ -17,7 +17,7 @@ export default function App() {
       <Stack.Navigator>
         {/* <Stack.Screen name="Provider" component={ProviderPage} /> */}
         {/* <Stack.Screen name="Requester" component={RequesterPage} /> */}
-        <Stack.Screen name="Dataset" component={DatasetPage} />
+        {/* <Stack.Screen name="Dataset" component={DatasetPage} /> */}
 
         <Stack.Screen name="Login" component={LoginPage} />
         <Stack.Screen name="Role" component={RolePage} />
