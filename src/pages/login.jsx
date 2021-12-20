@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, Image, StyleSheet, TextInput, View, TouchableOpacity } from 'react-native';
+import { Text, Image, TextInput, View, TouchableOpacity, SafeAreaView } from 'react-native';
 
 import service from '../utils/request';
 import styles from '../utils/style-sheet';
@@ -10,47 +10,44 @@ function LoginPage({ navigation }) {
     const [username, onChangeUsername] = React.useState();
     const [password, onChangePassword] = React.useState();
     return (
-        <View
-            style={
-                styles.container
-            }>
+        <View style={styles.container}>
 
-            <Image
-                style={
-                    {
-                        width: 195,
-                        height: 47
+            <Image style={{
+                width: 195,
+                height: 47
+            }}
+                source={require('../../assets/luce.png')}
+            />
+
+            <View
+
+            >
+                <TextInput
+                    style={
+                        styles.textInput
                     }
-                }
 
-                source={
-                    require('../../assets/luce.png')
-                }
-            />
+                    placeholder="Username: "
 
-            <TextInput
-                style={
-                    styles.textInput
-                }
+                    onChangeText={
+                        onChangeUsername
+                    }
+                />
 
-                placeholder="Username: "
+                <TextInput
+                    style={
+                        styles.textInput
+                    }
 
-                onChangeText={
-                    onChangeUsername
-                }
-            />
+                    placeholder="Password:"
 
-            <TextInput
-                style={
-                    styles.textInput
-                }
+                    onChangeText={
+                        onChangePassword
+                    }
+                />
 
-                placeholder="Password:"
+            </View>
 
-                onChangeText={
-                    onChangePassword
-                }
-            />
 
             <TouchableOpacity
                 style={
@@ -69,28 +66,21 @@ function LoginPage({ navigation }) {
                             "password": password
                         }
 
-                        // navigation.navigate("Role")
-
                         service.post(
-                            "/usr/login", {
+                            "/usr/login",
                             loginData
-                        }
                         ).then(response => {
-                            console.log(response)
-                        })
+                            if (200 === response.data.error.code) {
+                                navigation.navigate("Role")
+                            } else {
+                                alert(response.data.error.message)
 
-                        // axios({
-                        //     method: "post",
-                        //     url: "/user/login",
-                        //     data: {
-                        //         username: username,
-                        //         password: password
-                        //     }
-                        // })
-                        //     .then(res => {
-                        //         navigation.navigate("Role")
-                        //     })
-                        //     .catch(err => { })
+                            }
+                        }).catch(error => {
+                            console.log("hello world")
+                            console.log(error)
+                            alert(error)
+                        })
                     }
                 }>
 

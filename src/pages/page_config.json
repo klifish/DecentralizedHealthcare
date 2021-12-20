@@ -1,0 +1,21 @@
+{
+    "pageConfig": {
+        "consentStatementItems": [
+            "noRestrictions",
+            "opentoGeneralResearchAndClinicalCare",
+            "openToHMBResearch",
+            "openToPopulationAndAncestryResearch",
+            "openToDiseaseSpecific"
+        ],
+        "registerDetailItems": [
+            "First Name",
+            "Last Name",
+            "Gender",
+            "Age",
+            "Email",
+            "Institution",
+            "Country",
+            "Password"
+        ]
+    }
+}

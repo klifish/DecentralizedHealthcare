@@ -9,87 +9,103 @@ import {
 } from "react-native";
 
 import styles from "../utils/style-sheet";
+import service from "../utils/request";
 
-function RegisterPage() {
+const RegisterItem = (props) => {
+    const [, onChangeText] = React.useState();
+    return (
+        <TextInput
+            style={styles.textInput}
+            placeholder={props.name}
+            onChangeText={(_text) => {
+                onChangeText(_text)
+                props.dataTracker(props.name, _text)
+            }}
+        />
+    )
+}
 
-    const [name, onChangeName] = React.useState();
-    const [gender, onChangeGender] = React.useState();
-    const [age, onChangeAge] = React.useState();
-    const [email, onChangeEmail] = React.useState();
-    const [institution, onChangeInstitution] = React.useState();
-    const [conntry, onChangeCountry] = React.useState();
-    const [password, onChangePassword] = React.useState();
+const RegisterItems = (props) => {
+    const dataTrace = (item, value) => {
+        props.details[item] = value;
+    }
 
     return (
-        <View
-            style={
-                styles.container
-            }
-        >
-            <TextInput
-                style={
-                    styles.textInput
-                }
-                placeholder="Name"
-                onChangeText={onChangeName}
-            />
-
-            <TextInput
-                style={styles.textInput}
-                placeholder="Gender"
-                onChangeText={onChangeGender}
-            />
-
-            <TextInput
-                style={styles.textInput}
-                placeholder="Age"
-                onChangeText={onChangeAge}
-            />
-
-            <TextInput
-                style={styles.textInput}
-                placeholder="Email"
-                onChangeText={onChangeEmail}
-            >
-            </TextInput>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Institution"
-                onChangeText={onChangeInstitution}
-            >
-            </TextInput>
-            <TextInput
-                style={styles.textInput}
-                placeholder="Country"
-                onChangeText={onChangeCountry}
-            >
-            </TextInput>
-
-            <TextInput
-                style={styles.textInput}
-                placeholder="Password"
-                onChangeText={onChangePassword}
-            >
-            </TextInput>
-
-            <TouchableOpacity
-                style={
-                    styles.touchableOpacityStyle
-                }
-
-                onPress={
-                    () => {
-                        axios(
-                            {
-                                method: "post",
-                                url: "",
-                                data: {
-
-                                }
-                            }
+        <View>
+            {
+                props.items.map(
+                    (value) => {
+                        return (
+                            <RegisterItem
+                                key={value}
+                                name={value}
+                                dataTracker={dataTrace}
+                            />
                         )
                     }
-                }
+                )
+            }
+        </View>
+    )
+}
+
+function RegisterPage({ navigation }) {
+
+    // const items = ["tom", "jerry"]
+    const items = require("./page_config.json").pageConfig.registerDetailItems
+
+    // {"tom":"", "jerry":""}
+    var registerDetails = Object.fromEntries(
+        items.map(
+            (item) => ([item, ""])
+        )
+    )
+
+    const notEmpty = (fields) => {
+        var isEmpty = false
+
+
+        for (let key in fields) {
+            if (typeof (fields[key]) === "undefined") {
+                isEmpty = true
+                break
+            }
+        }
+    }
+
+    const handlePress = (registerDetails) => {
+        if (!notEmpty(registerDetails)) {
+            alert("Fields required but empty")
+        }
+
+        service.post(
+            "/usr/register",
+            registerDetails
+        ).then(response => {
+            if (200 === response.data.erroe.code) {
+                navigation.navigate("Login")
+            }
+            else {
+                alert(response.data.error.message)
+            }
+        }).catch(error => {
+            alert(error)
+        })
+    }
+
+    return (
+        <View>
+            <RegisterItems
+                items={items}
+                details={registerDetails}
+            >
+            </RegisterItems>
+
+            <TouchableOpacity
+                style={styles.touchableOpacityStyle}
+                onPress={() => {
+                    handlePress(registerDetails)
+                }}
             >
                 <Text
                     style={
@@ -102,9 +118,9 @@ function RegisterPage() {
                     Submit
                 </Text>
             </TouchableOpacity>
-        </View >
+        </View>
 
-    );
+    )
 }
 
 export default RegisterPage;

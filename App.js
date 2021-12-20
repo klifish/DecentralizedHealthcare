@@ -15,16 +15,13 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        {/* <Stack.Screen name="Provider" component={ProviderPage} /> */}
-        {/* <Stack.Screen name="Requester" component={RequesterPage} /> */}
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="Login" component={LoginPage} />
-        <Stack.Screen name="Role" component={RolePage} />
-
         <Stack.Screen name="Provider" component={ProviderPage} />
+
+        <Stack.Screen name="Role" component={RolePage} />
         <Stack.Screen name="Requester" component={RequesterPage} />
         <Stack.Screen name="Dataset" component={DatasetPage} />
-
       </Stack.Navigator>
     </NavigationContainer>
   );

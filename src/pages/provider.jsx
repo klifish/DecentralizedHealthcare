@@ -1,29 +1,91 @@
 import react from "react";
 import React from "react";
 
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
+import styles from "../utils/style-sheet";
+
+const ConsentStatements = (props) => (
+    <View style={{
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'flex-start',
+        justifyContent: 'center',
+        padding: 1
+    }}>
+
+        {
+            props.values.map((value) => {
+
+                const [checkState, onChangeCheckState] = React.useState(false);
+
+                return (
+
+                    <BouncyCheckbox
+                        style={{
+                            backgroundColor: "#fff",
+                        }}
+                        key={value}
+                        text={value}
+                        isChecked={false}
+                        textStyle={{
+                            textDecorationLine: "none"
+                        }}
+
+                        onPress={
+                            () => {
+                                props.consentTracing(value, checkState)
+                                console.log(checkState)
+                                onChangeCheckState(!checkState)
+                            }
+                        }
+                    />
+                )
+            })
+        }
+
+    </View>
+);
 
 function ProviderPage() {
-    const [noRestrictions, onChangeNoRextrictions] = react.useState();
-    const [opentoGeneralResearchAndClinicalCare, onChangeOpentoGeneralResearchAndClinicalCare] = react.useState();
-    const [openToHMBResearch, onChangeOpenToHMBResearch] = react.useState();
-    const [openToPopulationAndAncestryResearch, onChangeOpenToPopulationAndAncestryResearch] = react.useState();
-    const [openToDiseaseSpecific, onChangeOpenToDiseaseSpecific] = react.useState();
+    const consentStatements = ["noRestrictions", "opentoGeneralResearchAndClinicalCare", "openToHMBResearch", "openToPopulationAndAncestryResearch", "openToDiseaseSpecific"];
+    var consentResult = Object.fromEntries(
+        consentStatements.map(
+            (value) => [value, ""]
+        )
+    )
+
+    const consentTracing = (consent, result) => {
+        consentResult[consent] = result;
+        console.log(consentResult)
+    }
+    return (
+        <ConsentStatements
+            values={consentStatements}
+            consentTracing={consentTracing}
+        />
+    );
+
+    const [noRestrictions, onChangeNoRextrictions] = React.useState()
 
     return (
         <View
             style={styles.container}
         >
 
+            <View>
+                <TextInput
+                    style={
+                        styles.textInput
+                    }
+
+                    placeholder="Please input a data link"
+                />
+            </View>
+
             <TextInput
                 style={
-                    {
-                        height: 40,
-                        margin: 12,
-                        borderWidth: 1,
-                        padding: 10,
-                    }
+                    styles.textInput
                 }
 
                 placeholder="Please input a data link"
@@ -31,19 +93,7 @@ function ProviderPage() {
 
             <TouchableOpacity
                 style={
-                    {
-                        padding: 10,
-                        margin: 12,
-                        marginRight: 40,
-                        marginLeft: 40,
-                        marginTop: 10,
-                        paddingTop: 10,
-                        paddingBottom: 10,
-                        backgroundColor: '#1E6738',
-                        borderRadius: 10,
-                        borderWidth: 1,
-                        borderColor: '#fff'
-                    }
+                    styles.touchableOpacityStyle
                 }
 
                 onPress={
@@ -71,121 +121,121 @@ function ProviderPage() {
                 </Text>
             </TouchableOpacity>
 
-            <BouncyCheckbox
-                style={
-                    {
-                        backgroundColor: noRestrictions ? "#34eb83" : "#fff",
-                    }
-                }
-                textStyle={
-                    {
-                        textDecorationLine: "none"
-                    }
-                }
-                text="noRestrictions"
-                isChecked={noRestrictions}
-                onPress={
-                    () => {
-                        onChangeNoRextrictions(!noRestrictions)
-                    }
-                }
-            />
 
-            <BouncyCheckbox
-                style={
-                    {
-                        backgroundColor: opentoGeneralResearchAndClinicalCare ? "#34eb83" : "#fff",
+            <View
+                style={{
+                    backgroundColor: '#fff',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                }}
+            >
+                <BouncyCheckbox
+                    style={
+                        {
+                            backgroundColor: noRestrictions ? "#34eb83" : "#fff",
+                        }
                     }
-                }
-                textStyle={
-                    {
-                        textDecorationLine: "none"
+                    textStyle={
+                        {
+                            textDecorationLine: "none"
+                        }
                     }
-                }
-                text="opentoGeneralResearchAndClinicalCare"
-                isChecked={opentoGeneralResearchAndClinicalCare}
-                onPress={
-                    () => {
-                        onChangeOpentoGeneralResearchAndClinicalCare(!opentoGeneralResearchAndClinicalCare)
+                    text="noRestrictions"
+                    isChecked={noRestrictions}
+                    onPress={
+                        () => {
+                            onChangeNoRextrictions(!noRestrictions)
+                        }
                     }
-                }
+                />
 
-            />
+                {/* <BouncyCheckbox
+                    style={
+                        {
+                            // backgroundColor: opentoGeneralResearchAndClinicalCare ? "#34eb83" : "#fff",
+                        }
+                    }
+                    textStyle={
+                        {
+                            textDecorationLine: "none"
+                        }
+                    }
+                    text="opentoGeneralResearchAndClinicalCare"
+                    isChecked={opentoGeneralResearchAndClinicalCare}
+                    onPress={
+                        () => {
+                            onChangeOpentoGeneralResearchAndClinicalCare(!opentoGeneralResearchAndClinicalCare)
+                        }
+                    }
 
-            <BouncyCheckbox
-                style={
-                    {
-                        backgroundColor: openToHMBResearch ? "#34eb83" : "#fff",
-                    }
-                }
-                textStyle={
-                    {
-                        textDecorationLine: "none"
-                    }
-                }
-                text="openToHMBResearch"
-                isChecked={openToHMBResearch}
-                onPress={
-                    () => {
-                        onChangeOpenToHMBResearch(!openToHMBResearch)
-                    }
-                }
-            />
+                /> */}
 
-            <BouncyCheckbox
-                style={
-                    {
-                        backgroundColor: openToPopulationAndAncestryResearch ? "#34eb83" : "#fff",
+                {/* <BouncyCheckbox
+                    style={
+                        {
+                            // backgroundColor: openToHMBResearch ? "#34eb83" : "#fff",
+                        }
                     }
-                }
-                textStyle={
-                    {
-                        textDecorationLine: "none"
+                    textStyle={
+                        {
+                            textDecorationLine: "none"
+                        }
                     }
-                }
-                text="openToPopulationAndAncestryResearch"
-                isChecked={openToPopulationAndAncestryResearch}
-                onPress={
-                    () => {
-                        onChangeOpenToPopulationAndAncestryResearch(!openToPopulationAndAncestryResearch)
+                    text="openToHMBResearch"
+                    isChecked={openToHMBResearch}
+                    onPress={
+                        () => {
+                            onChangeOpenToHMBResearch(!openToHMBResearch)
+                        }
                     }
-                }
-            />
+                /> */}
 
-            <BouncyCheckbox
-                style={
-                    {
-                        backgroundColor: openToDiseaseSpecific ? "#34eb83" : "#fff",
+                {/* <BouncyCheckbox
+                    style={
+                        {
+                            backgroundColor: openToPopulationAndAncestryResearch ? "#34eb83" : "#fff",
+                        }
                     }
-                }
-                textStyle={
-                    {
-                        textDecorationLine: "none"
+                    textStyle={
+                        {
+                            textDecorationLine: "none"
+                        }
                     }
-                }
-                text="openToDiseaseSpecific"
-                isChecked={openToDiseaseSpecific}
-                onPress={
-                    () => {
-                        onChangeOpenToDiseaseSpecific(!openToDiseaseSpecific)
+                    text="openToPopulationAndAncestryResearch"
+                    isChecked={openToPopulationAndAncestryResearch}
+                    onPress={
+                        () => {
+                            onChangeOpenToPopulationAndAncestryResearch(!openToPopulationAndAncestryResearch)
+                        }
                     }
-                }
-            />
+                /> */}
+
+                {/* <BouncyCheckbox
+                    style={
+                        {
+                            backgroundColor: openToDiseaseSpecific ? "#34eb83" : "#fff",
+                        }
+                    }
+                    textStyle={
+                        {
+                            textDecorationLine: "none"
+                        }
+                    }
+                    text="openToDiseaseSpecific"
+                    isChecked={openToDiseaseSpecific}
+                    onPress={
+                        () => {
+                            onChangeOpenToDiseaseSpecific(!openToDiseaseSpecific)
+                        }
+                    }
+                /> */}
+
+            </View>
+
 
 
         </View>
     );
 }
-
-const styles = StyleSheet.create(
-    {
-        container: {
-            flex: 1,
-            backgroundColor: '#fff',
-            alignItems: 'left',
-            justifyContent: 'center',
-        },
-    }
-);
 
 export default ProviderPage;
