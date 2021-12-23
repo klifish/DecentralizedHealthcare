@@ -9,19 +9,22 @@ function LoginPage({ navigation }) {
 
     const [username, onChangeUsername] = React.useState();
     const [password, onChangePassword] = React.useState();
+
     return (
         <View style={styles.container}>
+            <View style={{
+                alignItems: "center",
+                margin: 12
+            }}>
+                <Image style={{
+                    width: 195,
+                    height: 47,
+                }} source={require('../../assets/luce.png')}
+                />
+            </View>
 
-            <Image style={{
-                width: 195,
-                height: 47
-            }}
-                source={require('../../assets/luce.png')}
-            />
 
-            <View
-
-            >
+            <View>
                 <TextInput
                     style={
                         styles.textInput
@@ -48,7 +51,6 @@ function LoginPage({ navigation }) {
 
             </View>
 
-
             <TouchableOpacity
                 style={
                     styles.touchableOpacityStyle
@@ -59,6 +61,7 @@ function LoginPage({ navigation }) {
 
                         if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
                             alert("Empty username or password")
+                            return
                         }
 
                         var loginData = {
@@ -96,20 +99,28 @@ function LoginPage({ navigation }) {
 
             </TouchableOpacity>
 
-            <Text
-                style={
-                    {
-                        textDecorationLine: "underline",
-                        padding: 10
-                    }
-                }
-
-                onPress={
-                    () => navigation.navigate("Register")
-                }
+            <View
+                style={{ alignItems: "flex-end" }}
             >
-                No account? register!
-            </Text>
+
+                <Text
+                    style={
+                        {
+                            textDecorationLine: "underline",
+                            padding: 10,
+                            margin: 12
+                        }
+                    }
+
+                    onPress={
+                        () => navigation.navigate("Register")
+                    }
+                >
+                    No account? register!
+                </Text>
+            </View>
+
+
         </View >
     );
 }

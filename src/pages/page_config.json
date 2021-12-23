@@ -16,6 +16,13 @@
             "Institution",
             "Country",
             "Password"
+        ],
+        "purposeStatementItems": [
+            "For methods development",
+            "For reference or control material",
+            "For populations research",
+            "For ancestry research",
+            "For health and biomedical research"
         ]
     }
 }

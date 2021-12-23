@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { Text, View, TextInput, TouchableOpacity, FlatList } from "react-native";
-
+import { Text, View, TextInput, TouchableOpacity, FlatList, Keyboard } from "react-native";
+import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from "../utils/style-sheet";
 
 const DATA = [
@@ -43,49 +43,123 @@ function _renderList(status) {
         return null;
 }
 
+function StatementItem(props) {
+    const [checkState, onChangeCheckState] = React.useState(false);
+    return (
+        <BouncyCheckbox
+
+            style={{
+                margin: 4
+            }}
+            text={props.text}
+            isChecked={false}
+            textStyle={{
+                textDecorationLine: "none"
+            }}
+
+            onPress={() => {
+                props.dataTracker(props.text, !checkState)
+                onChangeCheckState(!checkState)
+            }}
+        />
+    )
+}
+
+
+function StatementItems(props) {
+    const dataTracing = (item, value) => {
+        props.data[item] = value
+        console.log(props.data)
+    }
+
+    return (
+        <View
+            style={{
+                margin: 12
+            }}
+        >
+            {
+                props.items.map(
+                    (value) => {
+                        return (
+                            <StatementItem
+                                key={value}
+                                text={value}
+                                dataTracker={dataTracing}
+                            />
+                        )
+                    }
+                )
+            }
+
+        </View>
+    );
+}
+
+function CustomButton(props) {
+    return (
+        <View>
+            <TouchableOpacity
+                style={[styles.touchableOpacityStyle]}
+                onPress={props.onPress}
+            >
+                <Text style={{
+                    color: '#fff',
+                    textAlign: "center"
+                }}>
+                    {props.text}
+                </Text>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
 function RequesterPage() {
 
-
     const [hide, onChangeHide] = React.useState(false);
+
+    const purposeStatements =
+        require("./page_config.json").pageConfig.purposeStatementItems;
+
+    var purposeStatementsMap = Object.fromEntries(
+        purposeStatements.map(
+            (value) => ([value, false])
+        )
+    )
 
     return (
         <View
             style={styles.container}
         >
-            <TextInput
-                style={styles.textInput}
-                placeholder="Search"
-            >
 
-
-            </TextInput>
-
-            <TouchableOpacity
-                style={
-                    styles.touchableOpacityStyle
-                }
-                onPress={() => {
-
-                    onChangeHide(true);
-
+            <View
+                style={{
+                    flexDirection: "row",
+                    margin: 12
                 }}
             >
-                <Text
-                    style={{
-                        color: '#fff',
-                        textAlign: "center"
-                    }}
-                >
-                    Search
-                </Text>
-            </TouchableOpacity>
 
+                <TextInput
+                    style={[styles.textInput, { flex: 1 }]}
+                />
+
+                <CustomButton
+                    text="Search"
+                    style={{ flex: 1 }}
+                />
+
+            </View>
+
+            <StatementItems
+                items={purposeStatements}
+                data={purposeStatementsMap}
+            />
 
             {
                 _renderList(hide)
             }
 
-        </View>
+        </View >
     );
 }
 

@@ -66,7 +66,7 @@ function RegisterPage({ navigation }) {
 
 
         for (let key in fields) {
-            if (typeof (fields[key]) === "undefined") {
+            if (fields[key].length === 0) {
                 isEmpty = true
                 break
             }

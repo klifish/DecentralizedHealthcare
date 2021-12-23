@@ -36,24 +36,7 @@ function DatasetPage() {
 
         <TouchableOpacity style={styles.touchableOpacityStyle} onPress={() => {
 
-            // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
-            //     alert("Empty username or password")
-            // }
-
             navigation.navigate("Role")
-
-            // axios({
-            //     method: "post",
-            //     url: "/user/login",
-            //     data: {
-            //         username: username,
-            //         password: password
-            //     }
-            // })
-            //     .then(res => {
-            //         navigation.navigate("Role")
-            //     })
-            //     .catch(err => { })
         }}>
             <Text
                 style={{
