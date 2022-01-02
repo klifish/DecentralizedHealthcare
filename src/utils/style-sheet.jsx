@@ -14,7 +14,7 @@ const styles = StyleSheet.create(
             margin: 12,
             height: 40,
             borderWidth: 1,
-            borderRadius: 150
+            borderRadius: 150,
         },
 
         touchableOpacityStyle: {

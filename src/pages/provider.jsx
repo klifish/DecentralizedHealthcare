@@ -1,84 +1,83 @@
-import react from "react";
-import React from "react";
+import React, { Component } from 'react';
 
-import { Text, TextInput, TouchableOpacity, View, useState } from "react-native";
+import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import service from "../utils/request";
 import styles from "../utils/style-sheet";
 
-const ConsentStatements = (props) => {
-    const [noRestrictions, onChangeNoRestrictions] = React.useState(false);
+const ConsentItem = (props) => {
+
+    if (props.visible) {
+        return (
+            <BouncyCheckbox
+                style={{
+                    margin: 12,
+                }}
+
+                key={props.value}
+                text={props.value}
+                isChecked={false}
+                textStyle={{
+                    textDecorationLine: "none"
+                }}
+
+                onPress={
+                    props.onPress
+                }
+            />
+        );
+    } else {
+        return null;
+    }
+}
+
+const ConsentItems = (props) => {
+
+    var states = Object.fromEntries(
+        props.values.map(
+            (value) => ([value, React.useState(true)])
+        )
+    )
 
     return (
         <View>
-            <BouncyCheckbox
-                style={{
-                    backgroundColor: "#fff",
-                    margin: 12
-                }}
-                text="noRestrictions"
-                isChecked={false}
-                textStyle={{ textDecorationLine: "none" }}
-                onPress={() => {
-                    onChangeNoRestrictions(!noRestrictions)
-                    props.consentTracing("noRestrictions", !noRestrictions)
-                }}
-            >
-
-            </BouncyCheckbox>
-
-            <View style={{
-                backgroundColor: '#fff',
-                alignItems: 'flex-start',
-                justifyContent: 'center',
-            }}>
-                {
-                    props.values.map((value) => {
-                        const [checkState, onChangeCheckState] = React.useState(false);
-
-                        if (value === "noRestrictions") {
-                            // props.consentTracing(value, false)
-
-                            return
-                        }
-
-                        if (noRestrictions) {
-                            props.consentTracing(value, false)
-                            return
-                        }
-
+            {
+                props.values.map(
+                    (value) => {
                         return (
-                            <BouncyCheckbox
-                                style={{
-                                    backgroundColor: "#fff",
-                                    margin: 12,
-                                }}
+                            <ConsentItem
                                 key={value}
-                                text={value}
-                                isChecked={false}
-                                textStyle={{
-                                    textDecorationLine: "none"
-                                }}
+                                value={value}
 
-                                onPress={() => {
+                                visible={states[value][0]}
 
-                                    if (value == "noRestrictions") {
+                                onPress={
+                                    () => {
 
+                                        var bufferStates = states;
+                                        for (var s in states) {
+                                            if (s != value) {
+                                                states[s][1](!states[s][0])
+                                                bufferStates[s] = !states[s][0]
+                                            } else {
+                                                bufferStates[s] = states[s][0]
+
+                                            }
+
+                                        }
+
+                                        props.onChange(bufferStates);
+                                        // console.log(bufferStates)
                                     }
-                                    props.consentTracing(value, !checkState)
-                                    // console.log(checkState)
-                                    onChangeCheckState(!checkState)
-                                }} />
-                        );
-                    })
-                }
-            </View>
+                                }
+                            />
+                        )
+                    }
+                )
+            }
         </View>
-
-    );
-
-
-};
+    )
+}
 
 
 /**
@@ -96,17 +95,9 @@ const ConsentStatements = (props) => {
 function ProviderPage() {
 
     const [link, onChangeLink] = React.useState()
-    const consentStatements = require("./page_config.json").pageConfig.consentStatementItems
-    var consentResult = Object.fromEntries(
-        consentStatements.map(
-            (value) => [value, false]
-        )
-    )
+    const [consentStates, onChangeConsentStates] = React.useState({});
 
-    const consentTracing = (consent, result) => {
-        consentResult[consent] = result;
-        console.log(consentResult)
-    }
+    const consentStatements = require("./page_config.json").pageConfig.consentStatementItems
 
     return (
         <View style={styles.container}>
@@ -114,39 +105,53 @@ function ProviderPage() {
             <TextInput
                 style={styles.textInput}
                 placeholder="Please input a data link"
+                // onChange={onChangeLink}
+                onChangeText={onChangeLink}
             />
 
             <TouchableOpacity
                 style={styles.touchableOpacityStyle}
 
-                onPress={() => {
-                    // console.log(typeof (consentResult.noRestrictions))
-                    service.post(
-                        "/contract/dataUpload/",
-                        consentResult
-                    ).then(response => {
+                onPress={
+                    () => {
+                        var buff = { "link": link };
+                        buff = Object.assign(buff, consentStates)
 
-                    }).catch(error => {
+                        service.post(
+                            "/contract/dataUpload/",
+                            buff
+                        ).then(response => {
 
-                    })
-                }
+                        }).catch(error => {
+
+                        })
+                    }
                 }
             >
 
                 <Text
-                    style={{
-                        color: '#fff',
-                        textAlign: "center"
-                    }}
+                    style={
+                        {
+                            color: '#fff',
+                            textAlign: "center"
+                        }
+                    }
                 >
                     Upload
                 </Text>
             </TouchableOpacity>
 
-            <ConsentStatements
-                values={consentStatements}
-                consentTracing={consentTracing}
-            />
+            <View
+                style={{ flex: 1 }}
+            >
+                <ConsentItems
+                    values={consentStatements}
+                    onChange={
+                        onChangeConsentStates
+                    }
+                />
+            </View>
+
         </View>
     );
 }

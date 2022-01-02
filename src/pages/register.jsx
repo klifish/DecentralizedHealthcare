@@ -14,14 +14,40 @@ import service from "../utils/request";
 const RegisterItem = (props) => {
     const [, onChangeText] = React.useState();
     return (
-        <TextInput
-            style={styles.textInput}
-            placeholder={props.name}
-            onChangeText={(_text) => {
-                onChangeText(_text)
-                props.dataTracker(props.name, _text)
-            }}
-        />
+
+        <View
+            style={{ flexDirection: "row" }}
+        >
+            <Text
+                style={{
+                    marginHorizontal: 12,
+                    marginVertical: 10,
+                    // margin: 10,
+                    // padding: 10,
+                    flex: 1,
+
+                }}
+            >{props.name + ":"}</Text>
+            <TextInput
+                style={
+                    [
+                        // styles.textInput,
+                        {
+                            flex: 2,
+                            borderBottomWidth: 1,
+                            marginRight: 12,
+                            // padding: 10
+                        }
+                    ]
+                }
+                placeholder={props.name}
+                onChangeText={(_text) => {
+                    onChangeText(_text)
+                    props.dataTracker(props.name, _text)
+                }}
+            />
+        </View>
+
     )
 }
 
