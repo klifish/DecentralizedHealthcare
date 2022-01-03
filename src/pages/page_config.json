@@ -1,11 +1,11 @@
 {
     "pageConfig": {
         "consentStatementItems": [
-            "noRestrictions",
-            "opentoGeneralResearchAndClinicalCare",
-            "openToHMBResearch",
-            "openToPopulationAndAncestryResearch",
-            "openToDiseaseSpecific"
+            "No restrictions",
+            "Open to general research and clinical care",
+            "Open to health and biomedical research",
+            "Open to population and ancestry research",
+            "Open to disease specific"
         ],
         "registerDetailItems": [
             "First Name",

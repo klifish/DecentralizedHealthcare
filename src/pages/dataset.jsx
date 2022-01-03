@@ -1,54 +1,126 @@
+import { TabRouter } from "@react-navigation/native";
 import React from "react";
 
-import { TouchableOpacity, View, Text } from "react-native";
+import { TouchableOpacity, View, ScrollView, Text } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from "../utils/style-sheet";
 
-function DatasetPage() {
+function Dataset(props) {
 
-    const [noRestrictions, onChangeNoRextrictions] = React.useState();
+    const [checkState, onChangeCheckState] = React.useState(false);
+    return (
+        <View
+            style={{
+                flexDirection: "row",
+                margin: 10,
+                padding: 12,
+                // borderWidth: 1,
+                backgroundColor: "cornsilk",
+                borderRadius: 32
 
-    const datasetDescription = "hello world";
+            }}
+        >
+            <BouncyCheckbox
+                style={{ flex: 1 }}
+                onPress={
+                    () => {
+                        props.onSelected(!checkState);
+                        onChangeCheckState(!checkState)
+                    }
 
-    return (<View>
-        <Text>
-            {datasetDescription}
-        </Text>
-        <BouncyCheckbox
-            style={
-                {
-                    backgroundColor: noRestrictions ? "#34eb83" : "#fff",
                 }
-            }
-            textStyle={
-                {
-                    textDecorationLine: "none"
-                }
-            }
-            text="noRestrictions"
-            isChecked={noRestrictions}
-            onPress={
-                () => {
-                    onChangeNoRextrictions(!noRestrictions)
-                }
-            }
-        />
+            ></BouncyCheckbox>
 
-        <TouchableOpacity style={styles.touchableOpacityStyle} onPress={() => {
-
-            navigation.navigate("Role")
-        }}>
             <Text
                 style={{
-                    color: '#fff',
-                    textAlign: "center"
+                    // padding: 12,
+                    // margin: 10,
+                    // textAlign: "auto",
+                    // borderWidth: 1,
+                    flex: 6
+
                 }}
             >
-                Request
-            </Text>
+                {"id: "}
+                {props.id}
+                {"\n\n"}
 
-        </TouchableOpacity>
-    </View>)
+                {"data description:\n"}
+                {props.description}
+            </Text>
+        </View >
+    )
+}
+
+const PageElements = (props) => {
+
+    var multiIsSelected = Object.fromEntries(
+        props.data.map(
+            (value) => ([value.id, false])
+        )
+    )
+
+    return (
+        <View>
+
+            <ScrollView
+                onPress={props.onPress}
+            >
+                {
+                    props.data.map(
+                        (value) => {
+                            return (
+                                <Dataset
+                                    key={value.id}
+                                    description={value.description}
+                                    id={value.id}
+                                    onSelected={
+                                        (state) => {
+                                            multiIsSelected[value.id] = state;
+                                        }
+                                    }
+                                />
+                            );
+                        }
+                    )
+                }
+            </ ScrollView>
+
+            <CustomButton
+                text="Request"
+            />
+        </View>
+
+    );
+}
+
+function CustomButton(props) {
+    return (
+        <View>
+            <TouchableOpacity
+                style={[styles.touchableOpacityStyle, props.style]}
+                onPress={props.onPress}
+            >
+                <Text style={{
+                    color: '#fff',
+                    textAlign: "center"
+                }}>
+                    {props.text}
+                </Text>
+            </TouchableOpacity>
+        </View>
+    )
+}
+
+function DatasetPage({ route }) {
+
+    const paramsFromPreviousPage = route.params;
+
+    return (
+        <PageElements
+            data={paramsFromPreviousPage.data}
+        />
+    );
 }
 
 export default DatasetPage;

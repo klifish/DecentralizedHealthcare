@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Text, View, TextInput, TouchableOpacity, FlatList, Keyboard } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
@@ -6,16 +6,20 @@ import styles from "../utils/style-sheet";
 
 const DATA = [
     {
-        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28ba',
+        id: 'bd7acbea-c1b1-46c2-aed5-3ad53abb28baaaaaaaaaaaaaaaaaaaaaaa',
         title: 'First Item',
+        description: "first desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst desfirst des"
     },
     {
         id: '3ac68afc-c605-48d3-a4f8-fbd91aa97f63',
         title: 'Second Item',
+        description: "second des"
+
     },
     {
         id: '58694a0f-3da1-471f-bd96-145571e29d72',
         title: 'Third Item',
+        description: "third des"
     },
 ];
 
@@ -100,7 +104,7 @@ function CustomButton(props) {
     return (
         <View>
             <TouchableOpacity
-                style={[styles.touchableOpacityStyle]}
+                style={[styles.touchableOpacityStyle, props.style]}
                 onPress={props.onPress}
             >
                 <Text style={{
@@ -114,7 +118,7 @@ function CustomButton(props) {
     )
 }
 
-function RequesterPage() {
+function RequesterPage({ navigation }) {
 
     const [hide, onChangeHide] = React.useState(false);
 
@@ -126,6 +130,10 @@ function RequesterPage() {
             (value) => ([value, false])
         )
     )
+
+    const onPressButton = () => {
+        navigation.navigate("Dataset", { data: DATA });
+    }
 
     return (
         <View
@@ -146,6 +154,7 @@ function RequesterPage() {
                 <CustomButton
                     text="Search"
                     style={{ flex: 1 }}
+                    onPress={onPressButton}
                 />
 
             </View>
