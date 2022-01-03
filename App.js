@@ -19,6 +19,8 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginPage} />
 
         <Stack.Screen name="Request dataset" component={RequesterPage} />
+        <Stack.Screen name="Provide dataset" component={ProviderPage} />
+
         <Stack.Screen name="Dataset" component={DatasetPage} />
 
         <Stack.Screen name="Register" component={RegisterPage} />

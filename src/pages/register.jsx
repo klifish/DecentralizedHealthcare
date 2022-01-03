@@ -141,7 +141,7 @@ function RegisterPage({ navigation }) {
                         }
                     }
                 >
-                    Submit
+                    Register
                 </Text>
             </TouchableOpacity>
         </View>

@@ -59,31 +59,33 @@ function LoginPage({ navigation }) {
                 onPress={
                     () => {
 
-                        if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
-                            alert("Empty username or password")
-                            return
-                        }
+                        navigation.navigate("What do you want to do?")
 
-                        var loginData = {
-                            "username": username,
-                            "password": password
-                        }
+                        // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
+                        //     alert("Empty username or password")
+                        //     return
+                        // }
 
-                        service.post(
-                            "/usr/login",
-                            loginData
-                        ).then(response => {
-                            if (200 === response.data.error.code) {
-                                navigation.navigate("Role")
-                            } else {
-                                alert(response.data.error.message)
+                        // var loginData = {
+                        //     "username": username,
+                        //     "password": password
+                        // }
 
-                            }
-                        }).catch(error => {
-                            console.log("hello world")
-                            console.log(error)
-                            alert(error)
-                        })
+                        // service.post(
+                        //     "/usr/login",
+                        //     loginData
+                        // ).then(response => {
+                        //     if (200 === response.data.error.code) {
+                        //         navigation.navigate("Role")
+                        //     } else {
+                        //         alert(response.data.error.message)
+
+                        //     }
+                        // }).catch(error => {
+                        //     console.log("hello world")
+                        //     console.log(error)
+                        //     alert(error)
+                        // })
                     }
                 }>
 

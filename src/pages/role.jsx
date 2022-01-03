@@ -26,7 +26,7 @@ function RolePage(
 
                 onPress={
                     () => {
-                        navigation.navigate("Provider")
+                        navigation.navigate("Provide dataset")
                     }
                 }>
 
@@ -47,7 +47,7 @@ function RolePage(
                     styles.touchableOpacityStyle
                 }
                 onPress={
-                    () => navigation.navigate("Requester")
+                    () => navigation.navigate("Request dataset")
                 }>
 
                 <Text
