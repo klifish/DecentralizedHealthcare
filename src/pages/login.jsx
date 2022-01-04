@@ -7,8 +7,8 @@ import styles from '../utils/style-sheet';
 
 function LoginPage({ navigation }) {
 
-    const [username, onChangeUsername] = React.useState();
-    const [password, onChangePassword] = React.useState();
+    const [username, onChangeUsername] = React.useState("");
+    const [password, onChangePassword] = React.useState("");
 
     return (
         <View style={styles.container}>
@@ -58,8 +58,14 @@ function LoginPage({ navigation }) {
 
                 onPress={
                     () => {
+                        if (0 === username.length || 0 === password.length) {
+                            alert("Empty username or password")
+                            return
+                        }
 
-                        navigation.navigate("What do you want to do?")
+                        console.log(typeof (username))
+
+                        // navigation.navigate("What do you want to do?")
 
                         // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
                         //     alert("Empty username or password")
