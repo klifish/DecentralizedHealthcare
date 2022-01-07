@@ -4,27 +4,66 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import service from "../utils/request";
 import styles from "../utils/style-sheet";
+import { Ionicons } from '@expo/vector-icons';
+
+import Checkbox from 'expo-checkbox';
 
 const ConsentItem = (props) => {
 
     if (props.visible) {
         return (
-            <BouncyCheckbox
+            <View
                 style={{
-                    margin: 12,
+                    flexDirection: "row"
                 }}
+            >
+                <BouncyCheckbox
+                    style={{
+                        marginVertical: 12,
+                        marginLeft: 12,
+                    }}
 
-                key={props.value}
-                text={props.value}
-                isChecked={false}
-                textStyle={{
-                    textDecorationLine: "none"
+                    key={props.value}
+                    text={props.value}
+
+                    isChecked={false}
+                    textStyle={{
+                        textDecorationLine: "none"
+                    }}
+
+                    onPress={
+                        props.onPress
+                    }
+                />
+
+                <Ionicons name="information-circle-outline" style={{
+                    marginVertical: 12,
                 }}
+                    onPress={() => {
+                        alert("you pushed me")
+                    }}
+                />
 
-                onPress={
-                    props.onPress
-                }
-            />
+                <View
+                    style={{ flexDirection: 'row' }}
+                >
+
+                    <Checkbox
+                        style={{
+                            // borderWidth: 1
+                            // marginVertical: 12
+                        }}
+
+                        // disabled={false}
+                        value={true}
+                    ></Checkbox>
+
+                    <Text>test</Text>
+                </View>
+
+
+            </View>
+
         );
     } else {
         return null;
@@ -81,17 +120,17 @@ const ConsentItems = (props) => {
 
 
 /**
- {   
-    "estimate":false,
-    "description":"ds",
-    "link":"http://link.com",
-    "no_restrictions":false,
-    "open_to_general_research_and_clinical_care":false,
-    "open_to_HMB_research":false,
-    "open_to_population_and_ancestry_research":false,
-    "open_to_disease_specific":false
+ {
+                    "estimate":false,
+                "description":"ds",
+                "link":"http://link.com",
+                "no_restrictions":false,
+                "open_to_general_research_and_clinical_care":false,
+                "open_to_HMB_research":false,
+                "open_to_population_and_ancestry_research":false,
+                "open_to_disease_specific":false
 }
- */
+                */
 function ProviderPage() {
 
     const [link, onChangeLink] = React.useState()
@@ -105,7 +144,6 @@ function ProviderPage() {
             <TextInput
                 style={styles.textInput}
                 placeholder="Please input a data link"
-                // onChange={onChangeLink}
                 onChangeText={onChangeLink}
             />
 

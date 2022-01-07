@@ -1,15 +1,63 @@
 import React from 'react';
-import { Text, Image, TextInput, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Modal, Text, Image, TextInput, View, TouchableOpacity, SafeAreaView, Pressable } from 'react-native';
 
 import service from '../utils/request';
 import styles from '../utils/style-sheet';
 
 
+function MyModal(props) {
+    // const [modalVisible, setModalVisible] = React.useState(false);
+
+    return (
+        <View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={props.modalVisible}
+                onRequestClose={() => {
+                    Alert.alert("Modal has been closed.");
+                    props.setModalVisible(!props.modalVisible);
+                }}
+            >
+
+                <View>
+
+                    <Text>{props.message}</Text>
+                    <Pressable
+                        onPress={() => props.setModalVisible(!props.modalVisible)}
+                    >
+
+                        <Text>OK</Text>
+
+                    </Pressable>
+                </View>
+            </Modal>
+
+            <Pressable
+                onPress={() => props.setModalVisible(true)}
+            >
+                <Text>Show Modal</Text>
+            </Pressable>
+
+        </View>
+    )
+}
+
 function LoginPage({ navigation }) {
 
     const [username, onChangeUsername] = React.useState("");
     const [password, onChangePassword] = React.useState("");
+    const [modalVisible, setModalVisible] = React.useState(false);
 
+
+    var msg = "hello world"
+    return (
+        <MyModal
+            modalVisible={modalVisible}
+            setModalVisible={setModalVisible}
+            message={msg}
+        />
+    )
     return (
         <View style={styles.container}>
             <View style={{
@@ -59,13 +107,13 @@ function LoginPage({ navigation }) {
                 onPress={
                     () => {
                         if (0 === username.length || 0 === password.length) {
-                            alert("Empty username or password")
+                            alert("Please input username and password")
                             return
                         }
 
-                        console.log(typeof (username))
+                        // console.log(typeof (username))
 
-                        // navigation.navigate("What do you want to do?")
+                        navigation.navigate("What do you want to do?")
 
                         // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
                         //     alert("Empty username or password")
