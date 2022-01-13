@@ -10,71 +10,51 @@ import Checkbox from 'expo-checkbox';
 
 const ConsentItem = (props) => {
 
-    if (props.visible) {
-        return (
-            <View
-                style={{
-                    flexDirection: "row"
-                }}
-            >
-                <BouncyCheckbox
-                    style={{
-                        marginVertical: 12,
-                        marginLeft: 12,
-                    }}
+    return (
+        <View style={{
+            flexDirection: "row"
+        }}>
+            <View style={{
+                flexDirection: 'row',
+                margin: 12
 
-                    key={props.value}
-                    text={props.value}
+            }}>
 
-                    isChecked={false}
-                    textStyle={{
-                        textDecorationLine: "none"
-                    }}
+                <Checkbox
+                    value={props.state}
+                    disabled={props.disabled}
+                    onValueChange={props.onPress}
+                ></Checkbox>
 
-                    onPress={
-                        props.onPress
-                    }
-                />
-
-                <Ionicons name="information-circle-outline" style={{
-                    marginVertical: 12,
-                }}
-                    onPress={() => {
-                        alert("you pushed me")
-                    }}
-                />
-
-                <View
-                    style={{ flexDirection: 'row' }}
-                >
-
-                    <Checkbox
-                        style={{
-                            // borderWidth: 1
-                            // marginVertical: 12
-                        }}
-
-                        // disabled={false}
-                        value={true}
-                    ></Checkbox>
-
-                    <Text>test</Text>
-                </View>
-
-
+                <Text
+                    style={{ marginLeft: 12 }}
+                >{props.value}</Text>
             </View>
 
-        );
-    } else {
-        return null;
-    }
+            <Ionicons name="information-circle-outline" style={{
+                marginVertical: 12,
+            }}
+                onPress={() => {
+                    alert("you pushed me")
+                }}
+            />
+        </View >
+
+    );
+
 }
 
 const ConsentItems = (props) => {
 
     var states = Object.fromEntries(
         props.values.map(
-            (value) => ([value, React.useState(true)])
+            (value) => ([value, React.useState(false)])
+        )
+    )
+
+    var disabledStates = Object.fromEntries(
+        props.values.map(
+            (value) => ([value, React.useState(false)])
         )
     )
 
@@ -87,26 +67,35 @@ const ConsentItems = (props) => {
                             <ConsentItem
                                 key={value}
                                 value={value}
+                                visible={true}
 
-                                visible={states[value][0]}
+                                disabled={disabledStates[value][0]}
+                                state={states[value][0]}
 
                                 onPress={
                                     () => {
-
                                         var bufferStates = states;
                                         for (var s in states) {
                                             if (s != value) {
-                                                states[s][1](!states[s][0])
-                                                bufferStates[s] = !states[s][0]
-                                            } else {
                                                 bufferStates[s] = states[s][0]
-
+                                                disabledStates[s][1](!disabledStates[s][0])
                                             }
+                                            else {
+                                                states[s][1](!states[s][0])
 
+                                                bufferStates[s] = !states[s][0]
+                                            }
+                                            // if (s != value) {
+                                            //     states[s][1](!states[s][0])
+                                            //     bufferStates[s] = !states[s][0]
+                                            // } else {
+                                            //     bufferStates[s] = states[s][0]
+                                            // }
                                         }
 
                                         props.onChange(bufferStates);
-                                        // console.log(bufferStates)
+
+                                        console.log(bufferStates)
                                     }
                                 }
                             />
@@ -118,19 +107,6 @@ const ConsentItems = (props) => {
     )
 }
 
-
-/**
- {
-                    "estimate":false,
-                "description":"ds",
-                "link":"http://link.com",
-                "no_restrictions":false,
-                "open_to_general_research_and_clinical_care":false,
-                "open_to_HMB_research":false,
-                "open_to_population_and_ancestry_research":false,
-                "open_to_disease_specific":false
-}
-                */
 function ProviderPage() {
 
     const [link, onChangeLink] = React.useState()

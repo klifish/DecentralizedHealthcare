@@ -6,7 +6,7 @@ const styles = StyleSheet.create(
             flex: 1,
             backgroundColor: '#fff',
             // alignItems: 'center', // align children along the cross axis.
-            justifyContent: 'center', // align children within the main axis
+            // justifyContent: 'center', // align children within the main axis
         },
 
         textInput: {

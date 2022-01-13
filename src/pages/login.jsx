@@ -4,42 +4,65 @@ import { Modal, Text, Image, TextInput, View, TouchableOpacity, SafeAreaView, Pr
 import service from '../utils/request';
 import styles from '../utils/style-sheet';
 
-
 function MyModal(props) {
-    // const [modalVisible, setModalVisible] = React.useState(false);
-
     return (
-        <View>
-            <Modal
-                animationType="slide"
-                transparent={true}
-                visible={props.modalVisible}
-                onRequestClose={() => {
-                    Alert.alert("Modal has been closed.");
-                    props.setModalVisible(!props.modalVisible);
+        <Modal
+            animationType="fade"
+            transparent={true}
+            visible={props.modalVisible}
+            onRequestClose={() => {
+                props.setModalVisible(!props.modalVisible);
+            }}
+        >
+
+            <View
+                style={{
+                    flex: 1,
+                    justifyContent: "center",
                 }}
             >
-
-                <View>
-
-                    <Text>{props.message}</Text>
+                <View style={{
+                    margin: 20,
+                    backgroundColor: "white",
+                    borderRadius: 20,
+                    padding: 35,
+                    alignItems: "center",
+                    shadowColor: "#000",
+                    shadowOffset: {
+                        width: 0,
+                        height: 2
+                    },
+                    shadowOpacity: 0.25,
+                    shadowRadius: 4,
+                    elevation: 5,
+                }}>
+                    <Text
+                        style={{
+                            marginBottom: 15,
+                            textAlign: "center"
+                        }}
+                    >{props.message}</Text>
                     <Pressable
+                        style={{
+                            borderRadius: 20,
+                            padding: 10,
+                            elevation: 2,
+                            backgroundColor: "#2196F3"
+                        }}
                         onPress={() => props.setModalVisible(!props.modalVisible)}
                     >
-
-                        <Text>OK</Text>
-
+                        <Text
+                            style={{
+                                fontWeight: "bold",
+                                textAlign: "center"
+                            }}
+                        >
+                            OK
+                        </Text>
                     </Pressable>
                 </View>
-            </Modal>
-
-            <Pressable
-                onPress={() => props.setModalVisible(true)}
-            >
-                <Text>Show Modal</Text>
-            </Pressable>
-
-        </View>
+            </View>
+        </Modal>
     )
 }
 
@@ -48,29 +71,38 @@ function LoginPage({ navigation }) {
     const [username, onChangeUsername] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
 
+    var msg = "Please input username AND password"
+    return (
+        <View style={
+            [
+                styles.container,
+                {
+                    justifyContent: 'center',
+                }
+            ]
+        }>
 
-    var msg = "hello world"
-    return (
-        <MyModal
-            modalVisible={modalVisible}
-            setModalVisible={setModalVisible}
-            message={msg}
-        />
-    )
-    return (
-        <View style={styles.container}>
+            <MyModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
+
             <View style={{
                 alignItems: "center",
                 margin: 12
             }}>
-                <Image style={{
-                    width: 195,
-                    height: 47,
-                }} source={require('../../assets/luce.png')}
+                <Image
+                    style={{
+                        width: 195,
+                        height: 47,
+                    }}
+
+                    source={require('../../assets/luce.png')}
                 />
             </View>
-
 
             <View>
                 <TextInput
@@ -96,7 +128,6 @@ function LoginPage({ navigation }) {
                         onChangePassword
                     }
                 />
-
             </View>
 
             <TouchableOpacity
@@ -106,40 +137,40 @@ function LoginPage({ navigation }) {
 
                 onPress={
                     () => {
+
+                        var emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+
                         if (0 === username.length || 0 === password.length) {
-                            alert("Please input username and password")
+                            setModalVisible(true)
+                            setModalContent("Please type username AND password")
                             return
                         }
 
-                        // console.log(typeof (username))
+
+
+                        var loginData = {
+                            "username": username,
+                            "password": password
+                        }
+
+                        service.post(
+                            "/usr/login",
+                            loginData
+                        ).then(response => {
+                            if (200 === response.data.error.code) {
+                                navigation.navigate("What do you want to do?")
+                            } else {
+                                alert(response.data.error.message)
+
+                            }
+                        }).catch(error => {
+                            console.log("hello world")
+                            console.log(error)
+                            alert(error)
+                        })
 
                         navigation.navigate("What do you want to do?")
-
-                        // if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
-                        //     alert("Empty username or password")
-                        //     return
-                        // }
-
-                        // var loginData = {
-                        //     "username": username,
-                        //     "password": password
-                        // }
-
-                        // service.post(
-                        //     "/usr/login",
-                        //     loginData
-                        // ).then(response => {
-                        //     if (200 === response.data.error.code) {
-                        //         navigation.navigate("Role")
-                        //     } else {
-                        //         alert(response.data.error.message)
-
-                        //     }
-                        // }).catch(error => {
-                        //     console.log("hello world")
-                        //     console.log(error)
-                        //     alert(error)
-                        // })
                     }
                 }>
 

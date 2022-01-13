@@ -15,6 +15,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
+        {/* <Stack.Screen name="Provide dataset" component={ProviderPage} /> */}
+
 
         <Stack.Screen name="Login" component={LoginPage} />
 
