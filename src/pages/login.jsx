@@ -147,6 +147,12 @@ function LoginPage({ navigation }) {
                             return
                         }
 
+                        if (!emailReg.test(username)) {
+                            setModalVisible(true)
+                            setModalContent("Please type correct username")
+                            return
+                        }
+
 
 
                         var loginData = {

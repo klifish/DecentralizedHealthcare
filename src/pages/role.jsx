@@ -38,7 +38,7 @@ function RolePage(
                         }
                     }
                 >
-                    Provide data
+                    Upload data
                 </Text>
             </TouchableOpacity>
 
@@ -58,7 +58,7 @@ function RolePage(
                         }
                     }
                 >
-                    Request data
+                    Search data
                 </Text>
             </TouchableOpacity>
         </View>
