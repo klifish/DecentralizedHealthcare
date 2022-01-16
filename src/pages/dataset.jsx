@@ -4,22 +4,20 @@ import React from "react";
 import { TouchableOpacity, View, ScrollView, Text } from "react-native";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from "../utils/style-sheet";
+import DHButton from "../utils/dh-button";
+import service from "../utils/request";
 
 function Dataset(props) {
-
     const [checkState, onChangeCheckState] = React.useState(false);
     return (
-        <View
-            style={{
-                flexDirection: "row",
-                margin: 10,
-                padding: 12,
-                // borderWidth: 1,
-                backgroundColor: "cornsilk",
-                borderRadius: 32
+        <View style={{
+            flexDirection: "row",
+            margin: 10,
+            padding: 12,
+            backgroundColor: "cornsilk",
+            borderRadius: 32
 
-            }}
-        >
+        }} >
             <BouncyCheckbox
                 style={{ flex: 1 }}
                 onPress={
@@ -60,9 +58,18 @@ const PageElements = (props) => {
         )
     )
 
+    var selectedResult = [];
+
+    const retrieveToken = async () => {
+        try {
+            return await AsyncStorage.getItem("@token");
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     return (
         <View>
-
             <ScrollView
                 onPress={props.onPress}
             >
@@ -77,6 +84,12 @@ const PageElements = (props) => {
                                     onSelected={
                                         (state) => {
                                             multiIsSelected[value.id] = state;
+
+                                            if (state) {
+                                                selectedResult.push(value);
+                                            } else {
+                                                selectedResult.splice(selectedResult.findIndex(v => v.id === value.id), 1)
+                                            }
                                         }
                                     }
                                 />
@@ -86,30 +99,33 @@ const PageElements = (props) => {
                 }
             </ ScrollView>
 
-            <CustomButton
-                text="Request"
-            />
-        </View>
+            <DHButton
+                title="Request"
+                onPress={
+                    () => {
+                        if (0 === selectedResult.length) {
+                            return;
+                        }
 
+                        var token = retrieveToken();
+                        service.defaults.headers.common["token"] = token;
+
+                        service.post(
+                            "/contract/requestAccess",
+                            selectedResult
+                        ).then(response => {
+
+                            // todo 
+                        }).catch(err => {
+
+                            alert(err);
+                        })
+
+                    }
+                }
+            ></DHButton>
+        </View>
     );
-}
-
-function CustomButton(props) {
-    return (
-        <View>
-            <TouchableOpacity
-                style={[styles.touchableOpacityStyle, props.style]}
-                onPress={props.onPress}
-            >
-                <Text style={{
-                    color: '#fff',
-                    textAlign: "center"
-                }}>
-                    {props.text}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    )
 }
 
 function DatasetPage({ route }) {
