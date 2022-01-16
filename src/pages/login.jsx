@@ -3,10 +3,11 @@ import { Modal, Text, Image, TextInput, View, TouchableOpacity, SafeAreaView, Pr
 
 // import { API_URL, API_TOKEN } from "react-native-dotenv";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+// import Config from 'react-native-config';
 import service from '../utils/request';
 import styles from '../utils/style-sheet';
 import DHButton from '../utils/dh-button';
+import DHModal from '../utils/DHModal';
 
 const emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
 const TOKEN_KEY = '@token'
@@ -17,70 +18,6 @@ const saveToken = async (token) => {
     } catch (e) {
         alert('Failed to save the data to the storage')
     }
-}
-
-// const retrieveToken = 
-
-function MyModal(props) {
-    return (
-        <Modal
-            animationType="fade"
-            transparent={true}
-            visible={props.modalVisible}
-            onRequestClose={() => {
-                props.setModalVisible(!props.modalVisible);
-            }}
-        >
-
-            <View
-                style={{
-                    flex: 1,
-                    justifyContent: "center",
-                }}
-            >
-                <View style={{
-                    margin: 20,
-                    backgroundColor: "white",
-                    borderRadius: 20,
-                    padding: 35,
-                    alignItems: "center",
-                    shadowColor: "#000",
-                    shadowOffset: {
-                        width: 0,
-                        height: 2
-                    },
-                    shadowOpacity: 0.25,
-                    shadowRadius: 4,
-                    elevation: 5,
-                }}>
-                    <Text
-                        style={{
-                            marginBottom: 15,
-                            textAlign: "center"
-                        }}
-                    >{props.message}</Text>
-                    <Pressable
-                        style={{
-                            borderRadius: 20,
-                            padding: 10,
-                            elevation: 2,
-                            backgroundColor: "#2196F3"
-                        }}
-                        onPress={() => props.setModalVisible(!props.modalVisible)}
-                    >
-                        <Text
-                            style={{
-                                fontWeight: "bold",
-                                textAlign: "center"
-                            }}
-                        >
-                            OK
-                        </Text>
-                    </Pressable>
-                </View>
-            </View>
-        </Modal>
-    )
 }
 
 function LoginPage({ navigation }) {
@@ -112,7 +49,7 @@ function LoginPage({ navigation }) {
             justifyContent: 'center',
         }]}>
 
-            <MyModal
+            <DHModal
                 modalVisible={modalVisible}
                 setModalVisible={setModalVisible}
                 message={modalContent}
@@ -156,7 +93,8 @@ function LoginPage({ navigation }) {
 
             <DHButton title="Login"
                 onPress={() => {
-                    console.log(API_URL)
+                    // Config.API_URL;
+                    // console.log(Config.API_URL)
                     if (0 === username.length || 0 === password.length) {
                         setModalVisible(true)
                         setModalContent("Please type username AND password")

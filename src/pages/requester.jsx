@@ -1,8 +1,16 @@
 import React from "react";
 
-import { Text, View, TextInput, TouchableOpacity, FlatList, Keyboard } from "react-native";
+import {
+    View,
+    TextInput,
+} from "react-native";
+
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from "../utils/style-sheet";
+import DHButton from "../utils/dh-button";
+import DHModal from "../utils/DHModal";
+
+import service from "../utils/request";
 
 const DATA = [
     {
@@ -23,35 +31,10 @@ const DATA = [
     },
 ];
 
-const Item = ({ title }) => (
-    <View style={styles.item}>
-        <Text style={styles.title}>{title}</Text>
-    </View>
-);
-
-
-function _renderList(status) {
-    const renderItem = ({ item }) => (
-        <Item title={item.title} />
-    );
-    if (status) {
-        return (
-            <FlatList
-                data={DATA}
-                renderItem={renderItem}
-                keyExtractor={item => item.id}
-            />);
-
-    }
-    else
-        return null;
-}
-
 function StatementItem(props) {
     const [checkState, onChangeCheckState] = React.useState(false);
     return (
         <BouncyCheckbox
-
             style={{
                 margin: 4
             }}
@@ -77,11 +60,9 @@ function StatementItems(props) {
     }
 
     return (
-        <View
-            style={{
-                margin: 12
-            }}
-        >
+        <View style={{
+            margin: 12
+        }}>
             {
                 props.items.map(
                     (value) => {
@@ -100,27 +81,11 @@ function StatementItems(props) {
     );
 }
 
-function CustomButton(props) {
-    return (
-        <View>
-            <TouchableOpacity
-                style={[styles.touchableOpacityStyle, props.style]}
-                onPress={props.onPress}
-            >
-                <Text style={{
-                    color: '#fff',
-                    textAlign: "center"
-                }}>
-                    {props.text}
-                </Text>
-            </TouchableOpacity>
-        </View>
-    )
-}
-
 function RequesterPage({ navigation }) {
 
-    const [hide, onChangeHide] = React.useState(false);
+    const [searchContent, onChangeSearchContent] = React.useState("");
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
 
     const purposeStatements =
         require("./page_config.json").pageConfig.purposeStatementItems;
@@ -132,42 +97,73 @@ function RequesterPage({ navigation }) {
     )
 
     const onPressButton = () => {
+
+        // for debuging dataset page
         navigation.navigate("Dataset", { data: DATA });
+        return
+
+        if (0 === searchContent.length) {
+            setModalVisible(true)
+            setModalContent("Please type the search content")
+            return
+        }
+
+        var submitData = { "search_content": searchContent };
+        submitData = Object.assign(submitData, purposeStatementsMap)
+
+        var token = retrieveToken();
+        service.defaults.headers.common["token"] = token;
+
+        service.post(
+            "/contract/dataUpload/",
+            submitData
+        ).then(response => {
+            if (200 === response.error.code) {
+                navigation.navigate("Dataset", { data: DATA });
+            }
+        }).catch(err => {
+            alert(err)
+        })
+
+    }
+
+    const retrieveToken = async () => {
+        try {
+            return await AsyncStorage.getItem("@token");
+        } catch (e) {
+            console.log(e)
+        }
     }
 
     return (
-        <View
-            style={styles.container}
-        >
+        <View style={styles.container}>
 
-            <View
-                style={{
-                    flexDirection: "row",
-                    margin: 12
-                }}
-            >
+            <View style={{
+                flexDirection: "row",
+                margin: 12
+            }} >
+
+                <DHModal
+                    modalVisible={modalVisible}
+                    setModalVisible={setModalVisible}
+                    message={modalContent}
+                />
 
                 <TextInput
                     style={[styles.textInput, { flex: 1 }]}
+                    onChangeText={onChangeSearchContent}
                 />
 
-                <CustomButton
-                    text="Search"
-                    style={{ flex: 1 }}
+                <DHButton
+                    title="Search"
                     onPress={onPressButton}
                 />
-
             </View>
 
             <StatementItems
                 items={purposeStatements}
                 data={purposeStatementsMap}
             />
-
-            {
-                _renderList(hide)
-            }
-
         </View >
     );
 }
