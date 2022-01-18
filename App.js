@@ -22,7 +22,6 @@ export default function App() {
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="What do you want to do?" component={RolePage} />
 
-
       </Stack.Navigator>
     </NavigationContainer>
   );
