@@ -98,10 +98,24 @@ function RegisterPage({ navigation }) {
                 break
             }
         }
+
+        return isEmpty;
+    }
+
+    const hasEmptyField = (fields) => {
+        var empty_field = false;
+
+        for (let key in fields) {
+            if (fields[key].length === 0) {
+                empty_field = true;
+                break;
+            }
+        }
+        return empty_field;
     }
 
     const handlePress = (registerDetails) => {
-        if (!notEmpty(registerDetails)) {
+        if (hasEmptyField(registerDetails)) {
             setModalVisible(true)
             setModalContent("Fields required but empty");
             return
