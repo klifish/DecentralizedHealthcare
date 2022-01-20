@@ -6,6 +6,8 @@ import {
     View
 } from "react-native";
 
+import { Picker } from "@react-native-picker/picker";
+
 import service from "../utils/request";
 import DHButton from "../utils/dh-button";
 import DHModal from "../utils/DHModal";
@@ -22,42 +24,80 @@ class RegisterItemClass extends React.Component {
     }
 
     render() {
-        return (
-            <View
-                style={{ flexDirection: "row" }}
-            >
-                <Text
+        if (this.props.name === "Gender") {
+            return (
+                <View
                     style={{
-                        marginHorizontal: 12,
-                        marginVertical: 10,
-                        flex: 1,
+                        flexDirection: "row",
+
                     }}
                 >
-                    {
-                        this.props.name + ":"
-                    }
-                </Text>
-
-                <TextInput
-                    style={
-                        [{
-                            flex: 2,
-                            borderBottomWidth: 1,
-                            marginRight: 12,
-                        }]
-                    }
-                    ref={this.textInput}
-                    secureTextEntry={this.props.hidden}
-                    placeholder={this.props.name}
-                    onChangeText={
-                        (_text) => {
-                            this.setState({ state: _text })
-                            this.props.dataTracker(this.props.name, _text)
+                    <Text
+                        style={{
+                            marginHorizontal: 12,
+                            marginVertical: 10,
+                            flex: 1,
+                            alignContent: "center",
+                            justifyContent: "center"
+                        }}
+                    >
+                        {
+                            this.props.name + ":"
                         }
-                    }
-                />
-            </View>
-        )
+                    </Text>
+
+                    <Picker
+                        style={{
+                            flex: 2,
+                            borderWidth: 0,
+                            marginRight: 12,
+                        }}
+                    >
+                        <Picker.Item label="Male" value="male" />
+                        <Picker.Item label="Female" value="female" />
+                    </Picker>
+                </View>
+            )
+
+        } else {
+            return (
+                <View
+                    style={{ flexDirection: "row" }}
+                >
+                    <Text
+                        style={{
+                            marginHorizontal: 12,
+                            marginVertical: 10,
+                            flex: 1,
+                        }}
+                    >
+                        {
+                            this.props.name + ":"
+                        }
+                    </Text>
+
+                    <TextInput
+                        style={
+                            [{
+                                flex: 2,
+                                borderBottomWidth: 1,
+                                marginRight: 12,
+                            }]
+                        }
+                        ref={this.textInput}
+                        secureTextEntry={this.props.hidden}
+                        placeholder={this.props.name}
+                        onChangeText={
+                            (_text) => {
+                                this.setState({ state: _text })
+                                this.props.dataTracker(this.props.name, _text)
+                            }
+                        }
+                    />
+                </View>
+            )
+        }
+
     }
 }
 

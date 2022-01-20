@@ -10,12 +10,12 @@
         "registerDetailItems": [
             "First Name",
             "Last Name",
-            "Gender",
             "Age",
             "Email",
             "Institution",
             "Country",
-            "Password"
+            "Password",
+            "Gender"
         ],
         "purposeStatementItems": [
             "For methods development",
