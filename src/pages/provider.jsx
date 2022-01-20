@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
+import { Text, TextInput, View } from "react-native";
 import service from "../utils/request";
 import styles from "../utils/style-sheet";
 import { Ionicons } from '@expo/vector-icons';
