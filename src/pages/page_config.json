@@ -50,6 +50,44 @@
             "For populations research",
             "For ancestry research",
             "For health and biomedical research"
+        ],
+        "purposeStatementItemsPro": [
+            {
+                "MainCategories": [
+                    {
+                        "Name": "Research purpose",
+                        "Abbreviation": "GRU",
+                        "Subcategories": [
+                            {
+                                "Name": "methods development",
+                                "Abbreviation": "NMDS",
+                                "Description": "Use for methods development"
+                            },
+                            {
+                                "Name": "reference or control material",
+                                "Abbreviation": "RS-XX",
+                                "Description": "Use for reference or control material"
+                            }
+                        ]
+                    },
+                    {
+                        "Name": "health, Medical or Biomedical research purpose",
+                        "Abbreviation": "HMB",
+                        "Subcategories": [
+                            {
+                                "Name": "research concerning fundamental biology",
+                                "Abbreviation": "FB",
+                                "Description": "use for research concerning fundamental biology"
+                            },
+                            {
+                                "Name": "research concerning genetics",
+                                "Abbreviation": "GSO",
+                                "Description": "Use for research concerning genetics"
+                            }
+                        ]
+                    }
+                ]
+            }
         ]
     }
 }
