@@ -7,6 +7,33 @@
             "Open to population and ancestry research",
             "Open to disease specific"
         ],
+        "consentStatementItemsPro": [
+            {
+                "Name": "No restrictions",
+                "Abbreviation": "NRES",
+                "Description": "No restrictions on using the data"
+            },
+            {
+                "Name": "Open to general research and clinical care",
+                "Abbreviation": "GRU-CC",
+                "Description": "For health, medical, or bioedical purposes, includes population origin or ancestry study"
+            },
+            {
+                "Name": "Open to health, medical or biomedical research and clinical care",
+                "Abbreviation": "HMB-CC",
+                "Description": "Limited to Health, Medical or Biomedical research, excludes population origin or ancestry study"
+            },
+            {
+                "Name": "Open to population and ancestry research",
+                "Abbreviation": "POA",
+                "Description": "Use of the data limited to study of population origins or ancestry"
+            },
+            {
+                "Name": "Open to disease specific research and clinical care",
+                "Abbreviation": "DS-[XX]-CC",
+                "Description": "Use of the data must be related to a disease"
+            }
+        ],
         "registerDetailItems": [
             "First Name",
             "Last Name",
