@@ -27,7 +27,7 @@ const ConsentItem = (props) => {
                 <Text
                     style={{ marginLeft: 12 }}
                 >
-                    {props.value}
+                    {props.value["Name"]}
                 </Text>
             </View>
 
@@ -36,9 +36,11 @@ const ConsentItem = (props) => {
                     marginVertical: 12,
                 }}
 
-                onPress={() => {
-                    alert("you pushed me")
-                }}
+                onPress={
+                    () => {
+                        props.modalControl(true, props.value["Description"])
+                    }
+                }
             />
         </View >
     );
@@ -49,57 +51,73 @@ const ConsentItems = (props) => {
 
     var states = Object.fromEntries(
         props.values.map(
-            (value) => ([value, React.useState(false)])
+            (value) => ([value["Name"], React.useState(false)])
         )
     )
 
     var disabledStates = Object.fromEntries(
         props.values.map(
-            (value) => ([value, React.useState(false)])
+            (value) => ([value["Name"], React.useState(false)])
         )
     )
 
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
+    const modalControl = (visible, content) => {
+        setModalVisible(visible)
+        setModalContent(content)
+    }
+
     return (
         <View>
-            {
-                props.values.map(
-                    (value) => {
-                        return (
-                            <ConsentItem
-                                key={value}
-                                value={value}
-                                disabled={disabledStates[value][0]}
-                                state={states[value][0]}
+            <DHModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
 
-                                onPress={
-                                    () => {
-                                        var bufferStates = states;
-                                        for (var s in states) {
-                                            if (s != value) {
-                                                bufferStates[s] = states[s][0]
-                                                disabledStates[s][1](!disabledStates[s][0])
-                                            }
-                                            else {
-                                                states[s][1](!states[s][0])
+            <View>
+                {
+                    props.values.map(
+                        (value) => {
+                            return (
+                                <ConsentItem
+                                    modalControl={modalControl}
+                                    key={value["Name"]}
+                                    value={value}
+                                    disabled={disabledStates[value["Name"]][0]}
+                                    state={states[value["Name"]][0]}
 
-                                                bufferStates[s] = !states[s][0]
+                                    onPress={
+                                        () => {
+                                            var bufferStates = states;
+                                            for (var s in states) {
+                                                if (s != value) {
+                                                    bufferStates[s] = states[s][0]
+                                                    disabledStates[s][1](!disabledStates[s][0])
+                                                }
+                                                else {
+                                                    states[s][1](!states[s][0])
+
+                                                    bufferStates[s] = !states[s][0]
+                                                }
                                             }
+                                            props.onChange(bufferStates);
                                         }
-                                        props.onChange(bufferStates);
-                                        // console.log(bufferStates)
                                     }
-                                }
-                            />
-                        )
-                    }
-                )
-            }
+                                />
+                            )
+                        }
+                    )
+                }
+            </View>
         </View>
+
     )
 }
 
 function ProviderPage() {
-    const consentStatements = require("./page_config.json").pageConfig.consentStatementItems
+    const consentStatements = require("./page_config.json").pageConfig.consentStatementItemsPro
 
     const [link, onChangeLink] = React.useState()
     const [consentStates, onChangeConsentStates] = React.useState({});
