@@ -1,22 +1,25 @@
 {
     "pageConfig": {
         "consentStatementItems": [
-            "No restrictions",
-            "Open to general research and clinical care",
-            "Open to health and biomedical research",
-            "Open to population and ancestry research",
-            "Open to disease specific"
+            "no_restrictions",
+            "open_to_general_research_and_clinical_care",
+            "open_to_HMB_research",
+            "open_to_population_and_ancestry_research",
+            "open_to_disease_specific"
         ],
         "registerDetailItems": [
-            "First Name",
-            "Last Name",
-            "Gender",
-            "Age",
-            "Email",
-            "Institution",
-            "Country",
-            "Password"
+            "first_name",
+            "last_name",
+            "gender",
+            "age",
+            "email",
+            "institution",
+            "country",
+            "password",
+            "user_type"
         ],
+        
+
         "purposeStatementItems": [
             "For methods development",
             "For reference or control material",

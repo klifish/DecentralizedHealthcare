@@ -22,7 +22,6 @@ const RegisterItem = (props) => {
                 // margin: 10,
                 // padding: 10,
                 flex: 1,
-
             }}
             >
                 {props.name + ":"}
@@ -90,14 +89,18 @@ function RegisterPage({ navigation }) {
     )
 
     const notEmpty = (fields) => {
-        var isEmpty = false
+        var isEmpty = true
 
         for (let key in fields) {
+            console.log(fields[key])
+
             if (fields[key].length === 0) {
-                isEmpty = true
-                break
+                console.log(fields[key])
+                isEmpty = false
             }
         }
+
+        return isEmpty
     }
 
     const handlePress = (registerDetails) => {
@@ -106,9 +109,11 @@ function RegisterPage({ navigation }) {
             setModalContent("Fields required but empty");
             return
         }
+        registerDetails["create_wallet"] = true
+        console.log(registerDetails)
 
         service.post(
-            "/usr/register",
+            "/user/register/",
             registerDetails
         ).then(response => {
             if (200 === response.data.erroe.code) {

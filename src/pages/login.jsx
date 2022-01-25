@@ -38,7 +38,9 @@ function LoginPage({ navigation }) {
 
     const retrieveToken = async (token) => {
         try {
-            return await AsyncStorage.getItem("@token");
+            const token = await AsyncStorage.getItem("@token");
+            console.log("weird==="+token)
+            return token
         } catch (e) {
             console.log(e)
         }
@@ -113,11 +115,15 @@ function LoginPage({ navigation }) {
                     }
 
                     service.post(
-                        "/usr/login",
+                        "/user/login/",
                         loginData
                     ).then(response => {
                         if (200 === response.data.error.code) {
-                            saveToken(response.data.token);
+                            saveToken(response.data.data.token);
+                            retrieveToken().then((tok) => {
+                                console.log("token ==== "+tok)
+                                var token = tok
+                            })
                             navigation.navigate("What do you want to do?")
                         } else {
                             setModalVisible(true)
