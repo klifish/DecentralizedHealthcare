@@ -25,7 +25,9 @@ const ConsentItem = (props) => {
                 />
 
                 <Text
-                    style={{ marginLeft: 12 }}
+                    style={{
+                        marginLeft: 12
+                    }}
                 >
                     {props.value["Name"]}
                 </Text>
@@ -173,6 +175,14 @@ function ProviderPage() {
                     }
                 }
             ></DHButton>
+
+            <Text
+                style={{
+                    margin: 12
+                }}
+            >
+                Please choose consent statements:
+            </Text>
 
             <View
                 style={{ flex: 1 }}

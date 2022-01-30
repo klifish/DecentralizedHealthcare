@@ -2,10 +2,13 @@ import React from "react";
 
 import {
     View,
+    Text,
     TextInput,
 } from "react-native";
 
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import Checkbox from "expo-checkbox";
+import { Ionicons } from '@expo/vector-icons';
+
 import styles from "../utils/style-sheet";
 import DHButton from "../utils/dh-button";
 import DHModal from "../utils/DHModal";
@@ -31,32 +34,191 @@ const DATA = [
     },
 ];
 
-function StatementItem(props) {
-    const [checkState, onChangeCheckState] = React.useState(false);
-    return (
-        <BouncyCheckbox
-            style={{
-                margin: 4
-            }}
-            text={props.text}
-            isChecked={false}
-            textStyle={{
-                textDecorationLine: "none"
-            }}
+class DHCheckbox extends React.Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isChecked: false,
+            disabled: props.disabled
+        }
+    }
 
-            onPress={() => {
-                props.dataTracker(props.text, !checkState)
-                onChangeCheckState(!checkState)
-            }}
-        />
-    )
+    change(status) {
+        this.setState(status)
+    }
+
+    check() {
+        this.change({ isChecked: true })
+    }
+
+    uncheck() {
+        this.change({ isChecked: false })
+    }
+
+    clear() {
+        this.uncheck()
+        this.props.onSelected(this.props.text, false)
+    }
+
+    render() {
+        return (
+            <Checkbox
+                value={this.state.isChecked}
+                disabled={this.props.disabled}
+                onValueChange={
+                    () => {
+                        this.setState({
+                            isChecked: !(this.state.isChecked)
+                        }
+                        )
+
+                        // update to next rendering
+                        this.props.onSelected(this.props.text, !(this.state.isChecked))
+                    }
+                }
+            />
+        )
+    }
 }
 
+class StatementItemClass extends React.Component {
+    constructor(props) {
+        super(props)
+        this.checkbox = React.createRef()
+    }
+
+    clear() {
+        this.checkbox.current.clear()
+    }
+
+    render() {
+        return (
+            <View
+                style={
+                    [
+                        this.props.style,
+                        {
+                            flexDirection: "row"
+                        }
+                    ]
+                }
+            >
+                <DHCheckbox
+                    ref={this.checkbox}
+                    text={this.props.text}
+                    disabled={this.props.disabled}
+                    onSelected={this.props.onSelected}
+                />
+
+                <Text
+                    style={{
+                        marginLeft: 12
+                    }}
+                >
+                    {this.props.text}
+                </Text>
+
+                <Ionicons
+                    name="information-circle-outline"
+                    onPress={
+                        () => {
+                            // alert("hello world")
+                            this.props.modalControl(true, this.props.text)
+                        }
+                    }
+                >
+
+                </Ionicons>
+
+            </View>
+        )
+    }
+}
+
+function MainCategory(props) {
+    const [state, setState] = React.useState(false);
+
+    var subcategoryRef = Object.fromEntries(
+        props.data["Subcategories"].map(
+            (value) => ([value["Name"], React.createRef()])
+        )
+    )
+
+    var testRef = React.createRef();
+    var subStatementStatus = Object.fromEntries(
+        props.data["Subcategories"].map(
+            (value) => ([value["Name"], false])
+        )
+    )
+
+    const updateSubStatementStatus = (statement, status) => {
+        subStatementStatus[statement] = status
+        props.onSelected(props.text, subStatementStatus)
+    }
+
+    const clearSubStatus = () => {
+        for (var sub in subcategoryRef) {
+            subcategoryRef[sub].current.clear()
+        }
+    }
+
+    return (
+        <View>
+            <StatementItemClass
+                modalControl={props.modalControl}
+
+                ref={testRef}
+                style={{
+                    margin: 12
+                }}
+                text={props.data["Name"]}
+                disabled={false}
+                onSelected={
+                    () => {
+                        if (state) {
+                            clearSubStatus()
+                        }
+                        setState(!state)
+                    }
+                }
+            />
+
+            {
+                props.data["Subcategories"].map(
+                    (sub) => {
+                        return (
+                            <StatementItemClass
+                                style={{
+                                    marginLeft: 24,
+                                    margin: 12
+                                }}
+                                modalControl={props.modalControl}
+
+                                ref={subcategoryRef[sub["Name"]]}
+                                key={sub["Name"]}
+                                text={sub["Name"]}
+                                disabled={!state}
+                                onSelected={updateSubStatementStatus}
+                            />
+                        )
+                    }
+                )
+            }
+        </View >
+    )
+
+}
 
 function StatementItems(props) {
-    const dataTracing = (item, value) => {
-        props.data[item] = value
-        console.log(props.data)
+    var statementStatus = Object.fromEntries(
+        props.items.map(
+            (value) => ([value["Name"], {}])
+        )
+    )
+
+    const updateStatementStatus = (statement, status) => {
+        statementStatus[statement] = status
+        props.onUpdate(statementStatus)
     }
 
     return (
@@ -67,17 +229,20 @@ function StatementItems(props) {
                 props.items.map(
                     (value) => {
                         return (
-                            <StatementItem
-                                key={value}
-                                text={value}
-                                dataTracker={dataTracing}
+                            <MainCategory
+                                key={value["Name"]}
+                                text={value["Name"]}
+                                // subcategory={value["Subcategories"]}
+
+                                data={value}
+                                onSelected={updateStatementStatus}
+                                modalControl={props.modalControl}
                             />
                         )
                     }
                 )
             }
-
-        </View>
+        </View >
     );
 }
 
@@ -86,15 +251,27 @@ function RequesterPage({ navigation }) {
     const [searchContent, onChangeSearchContent] = React.useState("");
     const [modalVisible, setModalVisible] = React.useState(false);
     const [modalContent, setModalContent] = React.useState("");
+    const modalControl = (visible, content) => {
+        setModalVisible(visible)
+        setModalContent(content)
+    }
 
     const purposeStatements =
-        require("./page_config.json").pageConfig.purposeStatementItems;
+        require("./page_config.json").pageConfig.purposeStatementItemsPro;
 
-    var purposeStatementsMap = Object.fromEntries(
+
+    var selectedPurposeStatements = Object.fromEntries(
         purposeStatements.map(
-            (value) => ([value, false])
+            (value) => ([value["Name"], []])
         )
     )
+
+    // console.log(selectedPurposeStatements)
+
+    const updateSelectedStatements = (statementStatus) => {
+        selectedPurposeStatements = statementStatus
+        console.log(selectedPurposeStatements)
+    }
 
     const onPressButton = () => {
 
@@ -109,7 +286,7 @@ function RequesterPage({ navigation }) {
         }
 
         var submitData = { "search_content": searchContent };
-        submitData = Object.assign(submitData, purposeStatementsMap)
+        submitData = Object.assign(submitData, selectedPurposeStatements)
 
         var token = retrieveToken();
         service.defaults.headers.common["token"] = token;
@@ -160,9 +337,20 @@ function RequesterPage({ navigation }) {
                 />
             </View>
 
+            <Text
+                style={{
+                    marginLeft: 12
+                }}
+            >
+                Please choose for what purposes you would like to use the dataset:
+            </Text>
+
             <StatementItems
                 items={purposeStatements}
-                data={purposeStatementsMap}
+                data={selectedPurposeStatements}
+                onUpdate={updateSelectedStatements}
+                modalControl={modalControl}
+
             />
         </View >
     );
