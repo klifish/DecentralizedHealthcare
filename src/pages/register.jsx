@@ -11,12 +11,18 @@ import { Picker } from "@react-native-picker/picker";
 import service from "../utils/request";
 import DHButton from "../utils/dh-button";
 import DHModal from "../utils/DHModal";
-    
+
 class RegisterItemClass extends React.Component {
     constructor(props) {
         super(props);
-        this.state = "";
+        this.state = {
+            state: {}
+        };
         this.textInput = React.createRef();
+
+        if ("Gender" === this.props.data["key"]) {
+            this.props.dataTracker(this.props.data["key"], "male")
+        }
     }
 
     clear() {
@@ -29,6 +35,8 @@ class RegisterItemClass extends React.Component {
     }
 
     render() {
+
+
         if (this.props.data["key"] === "Gender") {
             return (
                 <View
@@ -57,6 +65,13 @@ class RegisterItemClass extends React.Component {
                             borderWidth: 0,
                             marginRight: 12,
                         }}
+
+                        onValueChange={
+                            (itemValue, itemIndex) => {
+                                this.setState({ state: itemValue })
+                                this.props.dataTracker(this.props.data["key"], itemValue)
+                            }
+                        }
                     >
                         <Picker.Item label="Male" value="male" />
                         <Picker.Item label="Female" value="female" />
@@ -65,7 +80,7 @@ class RegisterItemClass extends React.Component {
             )
 
         } else if (this.props.data["key"] === "Password") {
-            // todo add a eye icon for controling password presentation
+            // TODO add a eye icon for controling password presentation
             return (
                 <View
                     style={{ flexDirection: "row" }}
@@ -169,9 +184,9 @@ function RegisterPage({ navigation }) {
         for (var key in registerItemRefs) {
             registerItemRefs[key].current.clear();
         }
-    }   
+    }
 
-       
+
 
     const hasEmptyField = (fields) => {
         var empty_field = false;
