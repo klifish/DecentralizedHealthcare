@@ -51,7 +51,6 @@ const ConsentItem = (props) => {
 }
 
 const ConsentItems = (props) => {
-    
 
     var states = Object.fromEntries(
         props.values.map(
@@ -84,6 +83,7 @@ const ConsentItems = (props) => {
                 {
                     props.values.map(
                         (value) => {
+                            // console.log(value)
                             return (
                                 <ConsentItem
                                     modalControl={modalControl}
@@ -94,9 +94,10 @@ const ConsentItems = (props) => {
 
                                     onPress={
                                         () => {
+                                            // console.log(states)
                                             var bufferStates = states;
                                             for (var s in states) {
-                                                if (s != value) {
+                                                if (s != value["Name"]) {
                                                     bufferStates[s] = states[s][0]
                                                     disabledStates[s][1](!disabledStates[s][0])
                                                 }
@@ -133,7 +134,7 @@ function ProviderPage() {
     const retrieveToken = async (token) => {
         try {
             const token = await AsyncStorage.getItem("@token");
-            console.log("weird==="+token)
+            console.log("weird===" + token)
             return token
         } catch (e) {
             console.log(e)
@@ -164,7 +165,7 @@ function ProviderPage() {
                 title="Upload"
                 onPress={
                     () => {
-                        var buff = { "link": link, "description":description};
+                        var buff = { "link": link, "description": description };
                         buff = Object.assign(buff, consentStates)
 
                         retrieveToken().then((tok) => {
@@ -172,7 +173,7 @@ function ProviderPage() {
                             var token = tok
                             console.log("token:")
                             console.log(token)
-                            service.defaults.headers.common["Authorization"] = "Token "+token;
+                            service.defaults.headers.common["Authorization"] = "Token " + token;
 
                             service.post(
                                 "/contract/dataUpload/",
@@ -189,7 +190,7 @@ function ProviderPage() {
                                 alert(error)
                             })
                         })
-                        
+
                     }
                 }
             ></DHButton>
