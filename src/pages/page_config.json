@@ -35,14 +35,38 @@
             }
         ],
         "registerDetailItems": [
-            "First Name",
-            "Last Name",
-            "Age",
-            "Email",
-            "Institution",
-            "Country",
-            "Password",
-            "Gender"
+            {
+                "key": "FirstName",
+                "description": "First Name"
+            },
+            {
+                "key": "LastName",
+                "description": "Last Name"
+            },
+            {
+                "key": "Age",
+                "description": "Age"
+            },
+            {
+                "key": "Email",
+                "description": "E-mail"
+            },
+            {
+                "key": "Institution",
+                "description": "Institution"
+            },
+            {
+                "key": "Country",
+                "description": "Country"
+            },
+            {
+                "key": "Password",
+                "description": "Password"
+            },
+            {
+                "key": "Gender",
+                "description": "Gender"
+            }
         ],
         "purposeStatementItems": [
             "For methods development",

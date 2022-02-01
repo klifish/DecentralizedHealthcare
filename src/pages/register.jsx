@@ -20,11 +20,16 @@ class RegisterItemClass extends React.Component {
     }
 
     clear() {
+        // console.log(this.props.data["key"])
+        if (this.props.data["key"] == "Gender") {
+            return
+        }
+
         this.textInput.current.clear()
     }
 
     render() {
-        if (this.props.name === "Gender") {
+        if (this.props.data["key"] === "Gender") {
             return (
                 <View
                     style={{
@@ -42,7 +47,7 @@ class RegisterItemClass extends React.Component {
                         }}
                     >
                         {
-                            this.props.name + ":"
+                            this.props.data["description"] + ":"
                         }
                     </Text>
 
@@ -59,7 +64,8 @@ class RegisterItemClass extends React.Component {
                 </View>
             )
 
-        } else {
+        } else if (this.props.data["key"] === "Password") {
+            // todo add a eye icon for controling password presentation
             return (
                 <View
                     style={{ flexDirection: "row" }}
@@ -72,7 +78,7 @@ class RegisterItemClass extends React.Component {
                         }}
                     >
                         {
-                            this.props.name + ":"
+                            this.props.data["description"] + ":"
                         }
                     </Text>
 
@@ -86,11 +92,49 @@ class RegisterItemClass extends React.Component {
                         }
                         ref={this.textInput}
                         secureTextEntry={this.props.hidden}
-                        placeholder={this.props.name}
+                        placeholder={this.props.data["description"]}
                         onChangeText={
                             (_text) => {
                                 this.setState({ state: _text })
-                                this.props.dataTracker(this.props.name, _text)
+                                this.props.dataTracker(this.props.data["key"], _text)
+                            }
+                        }
+                    />
+                </View>
+            )
+        }
+        else {
+            return (
+                <View
+                    style={{ flexDirection: "row" }}
+                >
+                    <Text
+                        style={{
+                            marginHorizontal: 12,
+                            marginVertical: 10,
+                            flex: 1,
+                        }}
+                    >
+                        {
+                            this.props.data["description"] + ":"
+                        }
+                    </Text>
+
+                    <TextInput
+                        style={
+                            [{
+                                flex: 2,
+                                borderBottomWidth: 1,
+                                marginRight: 12,
+                            }]
+                        }
+                        ref={this.textInput}
+                        secureTextEntry={this.props.hidden}
+                        placeholder={this.props.data["description"]}
+                        onChangeText={
+                            (_text) => {
+                                this.setState({ state: _text })
+                                this.props.dataTracker(this.props.data["key"], _text)
                             }
                         }
                     />
@@ -110,15 +154,14 @@ function RegisterPage({ navigation }) {
     const [modalContent, setModalContent] = React.useState("");
     var registerItemRefs = Object.fromEntries(
         items.map(
-            (value) => ([value, React.useRef(null)])
+            (value) => ([value["key"], React.useRef(null)])
         )
     )
-
 
     // {"tom":"", "jerry":""}, for tracking the details of each fields
     var registerDetails = Object.fromEntries(
         items.map(
-            (item) => ([item, ""])
+            (item) => ([item["key"], ""])
         )
     )
 
@@ -142,6 +185,8 @@ function RegisterPage({ navigation }) {
 
     function dataTrace(item, value) {
         registerDetails[item] = value;
+
+        console.log(registerDetails)
     }
 
     const handlePress = (registerDetails) => {
@@ -183,10 +228,14 @@ function RegisterPage({ navigation }) {
                         (value) => {
                             return (
                                 <RegisterItemClass
-                                    hidden={value === "Password" ? true : false}
-                                    ref={registerItemRefs[value]}
-                                    key={value}
-                                    name={value}
+                                    hidden={value["key"] === "Password" ? true : false}
+                                    ref={registerItemRefs[value["key"]]}
+
+                                    key={value["key"]}
+                                    // name={value["description"]}
+
+
+                                    data={value}
                                     dataTracker={dataTrace}
                                 />
                             )
