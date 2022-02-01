@@ -15,14 +15,15 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-
         <Stack.Screen name="Login" component={LoginPage} />
+
         <Stack.Screen name="Request dataset" component={RequesterPage} />
-        <Stack.Screen name="Dataset" component={DatasetPage} />
         <Stack.Screen name="Provide dataset" component={ProviderPage} />
+
+        <Stack.Screen name="Dataset" component={DatasetPage} />
+
         <Stack.Screen name="Register" component={RegisterPage} />
         <Stack.Screen name="What do you want to do?" component={RolePage} />
-
 
       </Stack.Navigator>
     </NavigationContainer>

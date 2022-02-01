@@ -7,15 +7,66 @@
             "Open to population and ancestry research",
             "Open to disease specific"
         ],
+        "consentStatementItemsPro": [
+            {
+                "Name": "No restrictions",
+                "Abbreviation": "NRES",
+                "Description": "No restrictions on using the data"
+            },
+            {
+                "Name": "Open to general research and clinical care",
+                "Abbreviation": "GRU-CC",
+                "Description": "For health, medical, or bioedical purposes, includes population origin or ancestry study"
+            },
+            {
+                "Name": "Open to health, medical or biomedical research and clinical care",
+                "Abbreviation": "HMB-CC",
+                "Description": "Limited to Health, Medical or Biomedical research, excludes population origin or ancestry study"
+            },
+            {
+                "Name": "Open to population and ancestry research",
+                "Abbreviation": "POA",
+                "Description": "Use of the data limited to study of population origins or ancestry"
+            },
+            {
+                "Name": "Open to disease specific research and clinical care",
+                "Abbreviation": "DS-[XX]-CC",
+                "Description": "Use of the data must be related to a disease"
+            }
+        ],
         "registerDetailItems": [
-            "First Name",
-            "Last Name",
-            "Gender",
-            "Age",
-            "Email",
-            "Institution",
-            "Country",
-            "Password"
+            {
+                "key": "FirstName",
+                "description": "First Name"
+            },
+            {
+                "key": "LastName",
+                "description": "Last Name"
+            },
+            {
+                "key": "Age",
+                "description": "Age"
+            },
+            {
+                "key": "Email",
+                "description": "E-mail"
+            },
+            {
+                "key": "Institution",
+                "description": "Institution"
+            },
+            {
+                "key": "Country",
+                "description": "Country"
+            },
+            {
+                "key": "Password",
+                "description": "Password"
+            },
+            {
+                "key": "Gender",
+                "description": "Gender"
+            }
         ],
         "purposeStatementItems": [
             "For methods development",
@@ -23,6 +74,56 @@
             "For populations research",
             "For ancestry research",
             "For health and biomedical research"
+        ],
+        "purposeStatementItemsPro": [
+            {
+                "Name": "Research purpose",
+                "Abbreviation": "GRU",
+                "Subcategories": [
+                    {
+                        "Name": "methods development",
+                        "Abbreviation": "NMDS",
+                        "Description": "Use for methods development"
+                    },
+                    {
+                        "Name": "reference or control material",
+                        "Abbreviation": "RS-XX",
+                        "Description": "Use for reference or control material"
+                    }
+                ]
+            },
+            {
+                "Name": "Health, Medical or Biomedical (HMB) research purpose",
+                "Abbreviation": "HMB",
+                "Subcategories": [
+                    {
+                        "Name": "research concerning fundamental biology",
+                        "Abbreviation": "FB",
+                        "Description": "use for research concerning fundamental biology"
+                    },
+                    {
+                        "Name": "research concerning genetics",
+                        "Abbreviation": "GSO",
+                        "Description": "Use for research concerning genetics"
+                    }
+                ]
+            },
+            {
+                "Name": "Clinical purpose",
+                "Abbreviation": "CC",
+                "Subcategories": [
+                    {
+                        "Name": "decision support",
+                        "Abbreviation": "DSO",
+                        "Description": "Use for decision support"
+                    },
+                    {
+                        "Name": "disease support",
+                        "Abbreviation": "DS",
+                        "Description": "Use for disease support"
+                    }
+                ]
+            }
         ]
     }
 }
