@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
-import { Text, TextInput, View } from "react-native";
+import { Text, TextInput, TouchableNativeFeedbackComponent, TouchableOpacity, View } from "react-native";
 import service from "../utils/request";
 import styles from "../utils/style-sheet";
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Checkbox from 'expo-checkbox';
 import DHButton from '../utils/dh-button';
@@ -50,6 +51,7 @@ const ConsentItem = (props) => {
 }
 
 const ConsentItems = (props) => {
+    
 
     var states = Object.fromEntries(
         props.values.map(
@@ -122,13 +124,17 @@ function ProviderPage() {
     const consentStatements = require("./page_config.json").pageConfig.consentStatementItemsPro
 
     const [link, onChangeLink] = React.useState()
+    const [description, onChangeDesc] = React.useState()
+
     const [consentStates, onChangeConsentStates] = React.useState({});
     const [modalVisible, setModalVisible] = React.useState(false);
     const [modalContent, setModalContent] = React.useState("");
 
-    const retrieveToken = async () => {
+    const retrieveToken = async (token) => {
         try {
-            return await AsyncStorage.getItem("@token");
+            const token = await AsyncStorage.getItem("@token");
+            console.log("weird==="+token)
+            return token
         } catch (e) {
             console.log(e)
         }
@@ -148,30 +154,42 @@ function ProviderPage() {
                 onChangeText={onChangeLink}
             />
 
+            <TextInput
+                style={styles.textInput}
+                placeholder="Describe your dataset"
+                onChangeText={onChangeDesc}
+            />
+
             <DHButton
                 title="Upload"
                 onPress={
                     () => {
-                        var buff = { "link": link };
+                        var buff = { "link": link, "description":description};
                         buff = Object.assign(buff, consentStates)
 
-                        var token = retrieveToken();
-                        service.defaults.headers.common["token"] = token;
+                        retrieveToken().then((tok) => {
+                            console.log(tok)
+                            var token = tok
+                            console.log("token:")
+                            console.log(token)
+                            service.defaults.headers.common["Authorization"] = "Token "+token;
 
-                        service.post(
-                            "/contract/dataUpload/",
-                            buff
-                        ).then(response => {
-                            if (200 === response.error.code) {
-                                setModalVisible(true)
-                                setModalContent("Upload data successfully")
-                            } else {
-                                setModalVisible(true)
-                                setModalContent(response.data.error.message)
-                            }
-                        }).catch(error => {
-                            alert(error)
+                            service.post(
+                                "/contract/dataUpload/",
+                                buff
+                            ).then(response => {
+                                if (200 === response.data.error.code) {
+                                    setModalVisible(true)
+                                    setModalContent("Upload data successfully")
+                                } else {
+                                    setModalVisible(true)
+                                    setModalContent(response.data.error.message)
+                                }
+                            }).catch(error => {
+                                alert(error)
+                            })
                         })
+                        
                     }
                 }
             ></DHButton>
