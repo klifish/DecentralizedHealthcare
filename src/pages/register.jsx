@@ -11,7 +11,7 @@ import { Picker } from "@react-native-picker/picker";
 import service from "../utils/request";
 import DHButton from "../utils/dh-button";
 import DHModal from "../utils/DHModal";
-
+    
 class RegisterItemClass extends React.Component {
     constructor(props) {
         super(props);
@@ -169,7 +169,9 @@ function RegisterPage({ navigation }) {
         for (var key in registerItemRefs) {
             registerItemRefs[key].current.clear();
         }
-    }
+    }   
+
+       
 
     const hasEmptyField = (fields) => {
         var empty_field = false;
@@ -196,11 +198,13 @@ function RegisterPage({ navigation }) {
             clearContent(registerItemRefs)
             return
         }
+        registerDetails["create_wallet"] = true
+        console.log(registerDetails)
 
         console.log(registerDetails)
 
         service.post(
-            "/usr/register",
+            "/user/register/",
             registerDetails
         ).then(response => {
             if (200 === response.data.erroe.code) {
@@ -213,6 +217,7 @@ function RegisterPage({ navigation }) {
             alert(error)
         })
     }
+
 
     return (
         <View>

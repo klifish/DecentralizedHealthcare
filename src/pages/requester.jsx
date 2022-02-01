@@ -1,4 +1,5 @@
 import React from "react";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
     View,
@@ -276,8 +277,7 @@ function RequesterPage({ navigation }) {
     const onPressButton = () => {
 
         // for debuging dataset page
-        navigation.navigate("Dataset", { data: DATA });
-        return
+        
 
         if (0 === searchContent.length) {
             setModalVisible(true)
@@ -288,25 +288,33 @@ function RequesterPage({ navigation }) {
         var submitData = { "search_content": searchContent };
         submitData = Object.assign(submitData, selectedPurposeStatements)
 
-        var token = retrieveToken();
-        service.defaults.headers.common["token"] = token;
+        retrieveToken().then((tok) => {
+            var token = tok
+            service.defaults.headers.common["Authorization"] = "Token "+token;
 
-        service.post(
-            "/contract/dataUpload/",
-            submitData
-        ).then(response => {
-            if (200 === response.error.code) {
-                navigation.navigate("Dataset", { data: DATA });
-            }
-        }).catch(err => {
-            alert(err)
+            service.get(
+                "/contract/all/"
+            ).then(response => {
+                console.log(response)
+
+                if (200 === response.data.error.code) {
+                    console.log(response.data.data.contracts)
+                    navigation.navigate("Dataset", { data: response.data.data.contracts });
+                }
+            }).catch(err => {
+                alert(err)
+            })
         })
 
     }
 
-    const retrieveToken = async () => {
+    
+
+    const retrieveToken = async (token) => {
         try {
-            return await AsyncStorage.getItem("@token");
+            const token = await AsyncStorage.getItem("@token");
+            console.log("weird==="+token)
+            return token
         } catch (e) {
             console.log(e)
         }

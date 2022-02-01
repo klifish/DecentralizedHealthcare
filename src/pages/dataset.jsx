@@ -39,10 +39,12 @@ function Dataset(props) {
 
                 }}
             >
-                {"id: "}
+                {"contract id: "}
                 {props.id}
                 {"\n\n"}
-
+                {"contract address: "}
+                {props.contract_address}
+                {"\n\n"}
                 {"data description:\n"}
                 {props.description}
             </Text>
@@ -81,6 +83,7 @@ const PageElements = (props) => {
                                     key={value.id}
                                     description={value.description}
                                     id={value.id}
+                                    contract_address={value.contract_address}
                                     onSelected={
                                         (state) => {
                                             multiIsSelected[value.id] = state;
