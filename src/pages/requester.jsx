@@ -2,6 +2,7 @@ import React from "react";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {
+    ScrollView,
     View,
     Text,
     TextInput,
@@ -124,7 +125,7 @@ class StatementItemClass extends React.Component {
                     onPress={
                         () => {
                             // alert("hello world")
-                            this.props.modalControl(true, this.props.text)
+                            this.props.modalControl(true, this.props.description)
                         }
                     }
                 >
@@ -173,6 +174,9 @@ function MainCategory(props) {
                     margin: 12
                 }}
                 text={props.data["Name"]}
+
+                // No descripion for main category
+                description={props.data["Name"]}
                 disabled={false}
                 onSelected={
                     () => {
@@ -187,6 +191,7 @@ function MainCategory(props) {
             {
                 props.data["Subcategories"].map(
                     (sub) => {
+                        // console.log(sub)
                         return (
                             <StatementItemClass
                                 style={{
@@ -198,6 +203,8 @@ function MainCategory(props) {
                                 ref={subcategoryRef[sub["Name"]]}
                                 key={sub["Name"]}
                                 text={sub["Name"]}
+                                description={sub["Description"]}
+
                                 disabled={!state}
                                 onSelected={updateSubStatementStatus}
                             />
@@ -223,7 +230,7 @@ function StatementItems(props) {
     }
 
     return (
-        <View style={{
+        <ScrollView style={{
             margin: 12
         }}>
             {
@@ -243,7 +250,7 @@ function StatementItems(props) {
                     }
                 )
             }
-        </View >
+        </ScrollView >
     );
 }
 
@@ -277,7 +284,7 @@ function RequesterPage({ navigation }) {
     const onPressButton = () => {
 
         // for debuging dataset page
-        
+
 
         if (0 === searchContent.length) {
             setModalVisible(true)
@@ -290,7 +297,7 @@ function RequesterPage({ navigation }) {
 
         retrieveToken().then((tok) => {
             var token = tok
-            service.defaults.headers.common["Authorization"] = "Token "+token;
+            service.defaults.headers.common["Authorization"] = "Token " + token;
 
             service.get(
                 "/contract/all/"
@@ -308,12 +315,12 @@ function RequesterPage({ navigation }) {
 
     }
 
-    
+
 
     const retrieveToken = async (token) => {
         try {
             const token = await AsyncStorage.getItem("@token");
-            console.log("weird==="+token)
+            console.log("weird===" + token)
             return token
         } catch (e) {
             console.log(e)
