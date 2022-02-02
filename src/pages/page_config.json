@@ -68,8 +68,6 @@
                 "description": "Gender"
             }
         ],
-        
-
         "purposeStatementItems": [
             "For methods development",
             "For reference or control material",
@@ -91,6 +89,21 @@
                         "Name": "reference or control material",
                         "Abbreviation": "RS-XX",
                         "Description": "Use for reference or control material"
+                    },
+                    {
+                        "Name": "research concerning populations",
+                        "Abbreviation": "PO",
+                        "Description": "Use for research concerning populations"
+                    },
+                    {
+                        "Name": "research ancestry",
+                        "Abbreviation": "ANS",
+                        "Description": "Use for research ancestry"
+                    },
+                    {
+                        "Name": "biomedical research",
+                        "Abbreviation": "HMB",
+                        "Description": "Use for biomedical research"
                     }
                 ]
             },
@@ -107,6 +120,26 @@
                         "Name": "research concerning genetics",
                         "Abbreviation": "GSO",
                         "Description": "Use for research concerning genetics"
+                    },
+                    {
+                        "Name": "research concerning drug development",
+                        "Abbreviation": "DD",
+                        "Description": "Use for research concerning drug development"
+                    },
+                    {
+                        "Name": "research concerning any disease",
+                        "Abbreviation": "DS-XX",
+                        "Description": "Use for research concerning any disease"
+                    },
+                    {
+                        "Name": "research concerning age categories",
+                        "Abbreviation": "AGE",
+                        "Description": "Use for research concerning age categories"
+                    },
+                    {
+                        "Name": "research concerning gender categories",
+                        "Abbreviation": "GEN",
+                        "Description": "Use for research concerning gender categories"
                     }
                 ]
             },
