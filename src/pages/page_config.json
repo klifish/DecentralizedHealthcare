@@ -78,30 +78,36 @@
         "purposeStatementItemsPro": [
             {
                 "Name": "Research purpose",
+                "Key": "ResearchPurpose",
                 "Abbreviation": "GRU",
                 "Subcategories": [
                     {
                         "Name": "methods development",
+                        "Key": "MethodsDevelopment",
                         "Abbreviation": "NMDS",
                         "Description": "Use for methods development"
                     },
                     {
                         "Name": "reference or control material",
+                        "Key": "ReferenceOrControlMeterial",
                         "Abbreviation": "RS-XX",
                         "Description": "Use for reference or control material"
                     },
                     {
                         "Name": "research concerning populations",
+                        "Key": "ResearchConcerningPopulations",
                         "Abbreviation": "PO",
                         "Description": "Use for research concerning populations"
                     },
                     {
                         "Name": "research ancestry",
+                        "Key": "ResearchAncestry",
                         "Abbreviation": "ANS",
                         "Description": "Use for research ancestry"
                     },
                     {
                         "Name": "biomedical research",
+                        "Key": "BiomedicalResearch",
                         "Abbreviation": "HMB",
                         "Description": "Use for biomedical research"
                     }
@@ -109,35 +115,42 @@
             },
             {
                 "Name": "Health, Medical or Biomedical (HMB) research purpose",
+                "Key": "HMBResearchPurpose",
                 "Abbreviation": "HMB",
                 "Subcategories": [
                     {
                         "Name": "research concerning fundamental biology",
+                        "Key": "ResearchConcerningFundamentalBiology",
                         "Abbreviation": "FB",
                         "Description": "use for research concerning fundamental biology"
                     },
                     {
                         "Name": "research concerning genetics",
+                        "Key": "ResearchConcerningGnetics",
                         "Abbreviation": "GSO",
                         "Description": "Use for research concerning genetics"
                     },
                     {
                         "Name": "research concerning drug development",
+                        "Key": "ResearchConcerningDrugDevelopment",
                         "Abbreviation": "DD",
                         "Description": "Use for research concerning drug development"
                     },
                     {
                         "Name": "research concerning any disease",
+                        "Key": "ResearchConcerningAnyDisease",
                         "Abbreviation": "DS-XX",
                         "Description": "Use for research concerning any disease"
                     },
                     {
                         "Name": "research concerning age categories",
+                        "Key": "ResearchConcerningAgeCategories",
                         "Abbreviation": "AGE",
                         "Description": "Use for research concerning age categories"
                     },
                     {
                         "Name": "research concerning gender categories",
+                        "Key": "ResearchConcerningGenderCategories",
                         "Abbreviation": "GEN",
                         "Description": "Use for research concerning gender categories"
                     }
@@ -145,15 +158,18 @@
             },
             {
                 "Name": "Clinical purpose",
+                "Key": "ClinicalPurpose",
                 "Abbreviation": "CC",
                 "Subcategories": [
                     {
                         "Name": "decision support",
+                        "Key": "DecisionSupport",
                         "Abbreviation": "DSO",
                         "Description": "Use for decision support"
                     },
                     {
                         "Name": "disease support",
+                        "Key": "DiseaseSupport",
                         "Abbreviation": "DS",
                         "Description": "Use for disease support"
                     }

@@ -59,7 +59,7 @@ class DHCheckbox extends React.Component {
 
     clear() {
         this.uncheck()
-        this.props.onSelected(this.props.text, false)
+        this.props.onSelected(this.props.keyText, false)
     }
 
     render() {
@@ -69,13 +69,14 @@ class DHCheckbox extends React.Component {
                 disabled={this.props.disabled}
                 onValueChange={
                     () => {
-                        this.setState({
-                            isChecked: !(this.state.isChecked)
-                        }
+                        this.setState(
+                            {
+                                isChecked: !(this.state.isChecked)
+                            }
                         )
 
                         // update to next rendering
-                        this.props.onSelected(this.props.text, !(this.state.isChecked))
+                        this.props.onSelected(this.props.keyText, !(this.state.isChecked))
                     }
                 }
             />
@@ -108,6 +109,7 @@ class StatementItemClass extends React.Component {
                 <DHCheckbox
                     ref={this.checkbox}
                     text={this.props.text}
+                    keyText={this.props.keyText}
                     disabled={this.props.disabled}
                     onSelected={this.props.onSelected}
                 />
@@ -149,13 +151,15 @@ function MainCategory(props) {
     var testRef = React.createRef();
     var subStatementStatus = Object.fromEntries(
         props.data["Subcategories"].map(
-            (value) => ([value["Name"], false])
+            (value) => ([value["Key"], false])
         )
     )
 
     const updateSubStatementStatus = (statement, status) => {
         subStatementStatus[statement] = status
-        props.onSelected(props.text, subStatementStatus)
+
+        // console.log(subStatementStatus)
+        props.onSelected(props.keyText, subStatementStatus)
     }
 
     const clearSubStatus = () => {
@@ -198,11 +202,12 @@ function MainCategory(props) {
                                     marginLeft: 24,
                                     margin: 12
                                 }}
+                                ref={subcategoryRef[sub["Name"]]}
                                 modalControl={props.modalControl}
 
-                                ref={subcategoryRef[sub["Name"]]}
                                 key={sub["Name"]}
                                 text={sub["Name"]}
+                                keyText={sub["Key"]}
                                 description={sub["Description"]}
 
                                 disabled={!state}
@@ -214,15 +219,16 @@ function MainCategory(props) {
             }
         </View >
     )
-
 }
 
 function StatementItems(props) {
     var statementStatus = Object.fromEntries(
         props.items.map(
-            (value) => ([value["Name"], {}])
+            (value) => ([value["Key"], {}])
         )
     )
+
+    // console.log(statementStatus)
 
     const updateStatementStatus = (statement, status) => {
         statementStatus[statement] = status
@@ -241,6 +247,7 @@ function StatementItems(props) {
                                 key={value["Name"]}
                                 text={value["Name"]}
                                 // subcategory={value["Subcategories"]}
+                                keyText={value["Key"]}
 
                                 data={value}
                                 onSelected={updateStatementStatus}
@@ -268,9 +275,10 @@ function RequesterPage({ navigation }) {
         require("./page_config.json").pageConfig.purposeStatementItemsPro;
 
 
+    // for main categories
     var selectedPurposeStatements = Object.fromEntries(
         purposeStatements.map(
-            (value) => ([value["Name"], []])
+            (value) => ([value["Key"], []])
         )
     )
 
@@ -362,7 +370,7 @@ function RequesterPage({ navigation }) {
 
             <StatementItems
                 items={purposeStatements}
-                data={selectedPurposeStatements}
+                // data={selectedPurposeStatements}
                 onUpdate={updateSelectedStatements}
                 modalControl={modalControl}
 
