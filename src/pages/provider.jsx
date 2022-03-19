@@ -54,13 +54,13 @@ const ConsentItems = (props) => {
 
     var states = Object.fromEntries(
         props.values.map(
-            (value) => ([value["Name"], React.useState(false)])
+            (value) => ([value["Key"], React.useState(false)])
         )
     )
 
     var disabledStates = Object.fromEntries(
         props.values.map(
-            (value) => ([value["Name"], React.useState(false)])
+            (value) => ([value["Key"], React.useState(false)])
         )
     )
 
@@ -87,17 +87,17 @@ const ConsentItems = (props) => {
                             return (
                                 <ConsentItem
                                     modalControl={modalControl}
-                                    key={value["Name"]}
+                                    key={value["Key"]}
                                     value={value}
-                                    disabled={disabledStates[value["Name"]][0]}
-                                    state={states[value["Name"]][0]}
+                                    disabled={disabledStates[value["Key"]][0]}
+                                    state={states[value["Key"]][0]}
 
                                     onPress={
                                         () => {
                                             // console.log(states)
                                             var bufferStates = states;
                                             for (var s in states) {
-                                                if (s != value["Name"]) {
+                                                if (s != value["Key"]) {
                                                     bufferStates[s] = states[s][0]
                                                     disabledStates[s][1](!disabledStates[s][0])
                                                 }
@@ -107,6 +107,8 @@ const ConsentItems = (props) => {
                                                     bufferStates[s] = !states[s][0]
                                                 }
                                             }
+
+                                            console.log(bufferStates)
                                             props.onChange(bufferStates);
                                         }
                                     }

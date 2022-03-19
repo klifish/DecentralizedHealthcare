@@ -10,61 +10,66 @@
         "consentStatementItemsPro": [
             {
                 "Name": "No restrictions",
+                "Key": "no_restrictions",
                 "Abbreviation": "NRES",
                 "Description": "No restrictions on using the data"
             },
             {
                 "Name": "Open to general research and clinical care",
+                "Key": "open_to_general_research_and_clinical_care",
                 "Abbreviation": "GRU-CC",
                 "Description": "For health, medical, or bioedical purposes, includes population origin or ancestry study"
             },
             {
                 "Name": "Open to health, medical or biomedical research and clinical care",
+                "Key": "open_to_health_medical_or_biomedical_research_and_clinical_care",
                 "Abbreviation": "HMB-CC",
                 "Description": "Limited to Health, Medical or Biomedical research, excludes population origin or ancestry study"
             },
             {
                 "Name": "Open to population and ancestry research",
+                "Key": "open_to_population_and_ancestry_research",
                 "Abbreviation": "POA",
                 "Description": "Use of the data limited to study of population origins or ancestry"
             },
             {
                 "Name": "Open to disease specific research and clinical care",
+                "Key": "open_to_disease_specific_research_and_clinical_care",
                 "Abbreviation": "DS-[XX]-CC",
                 "Description": "Use of the data must be related to a disease"
             }
         ],
         "registerDetailItems": [
             {
-                "key": "FirstName",
+                "key": "first_name",
                 "description": "First Name"
             },
             {
-                "key": "LastName",
+                "key": "last_name",
                 "description": "Last Name"
             },
             {
-                "key": "Age",
+                "key": "age",
                 "description": "Age"
             },
             {
-                "key": "Email",
+                "key": "email",
                 "description": "E-mail"
             },
             {
-                "key": "Institution",
+                "key": "institution",
                 "description": "Institution"
             },
             {
-                "key": "Country",
+                "key": "country",
                 "description": "Country"
             },
             {
-                "key": "Password",
+                "key": "password",
                 "description": "Password"
             },
             {
-                "key": "Gender",
+                "key": "gender",
                 "description": "Gender"
             }
         ],

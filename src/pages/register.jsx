@@ -20,14 +20,14 @@ class RegisterItemClass extends React.Component {
         };
         this.textInput = React.createRef();
 
-        if ("Gender" === this.props.data["key"]) {
+        if ("gender" === this.props.data["key"]) {
             this.props.dataTracker(this.props.data["key"], "male")
         }
     }
 
     clear() {
         // console.log(this.props.data["key"])
-        if (this.props.data["key"] == "Gender") {
+        if (this.props.data["key"] == "gender") {
             return
         }
 
@@ -37,7 +37,7 @@ class RegisterItemClass extends React.Component {
     render() {
 
 
-        if (this.props.data["key"] === "Gender") {
+        if (this.props.data["key"] === "gender") {
             return (
                 <View
                     style={{
@@ -73,13 +73,13 @@ class RegisterItemClass extends React.Component {
                             }
                         }
                     >
-                        <Picker.Item label="Male" value="male" />
-                        <Picker.Item label="Female" value="female" />
+                        <Picker.Item label="Male" value="0" />
+                        <Picker.Item label="Female" value="1" />
                     </Picker>
                 </View>
             )
 
-        } else if (this.props.data["key"] === "Password") {
+        } else if (this.props.data["key"] === "password") {
             // TODO add a eye icon for controling password presentation
             return (
                 <View
@@ -203,10 +203,11 @@ function RegisterPage({ navigation }) {
     function dataTrace(item, value) {
         registerDetails[item] = value;
 
-        console.log(registerDetails)
+        // console.log(registerDetails)
     }
 
     const handlePress = (registerDetails) => {
+        console.log(registerDetails)
         if (hasEmptyField(registerDetails)) {
             setModalVisible(true);
             setModalContent("Fields required but empty");
@@ -214,9 +215,10 @@ function RegisterPage({ navigation }) {
             return
         }
         registerDetails["create_wallet"] = true
-        console.log(registerDetails)
+        registerDetails["user_type"] = 1
+        // console.log(registerDetails)
 
-        console.log(registerDetails)
+        // console.log(registerDetails)
 
         service.post(
             "/user/register/",
@@ -248,7 +250,7 @@ function RegisterPage({ navigation }) {
                         (value) => {
                             return (
                                 <RegisterItemClass
-                                    hidden={value["key"] === "Password" ? true : false}
+                                    hidden={value["key"] === "password" ? true : false}
                                     ref={registerItemRefs[value["key"]]}
 
                                     key={value["key"]}
