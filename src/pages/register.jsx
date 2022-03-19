@@ -20,14 +20,14 @@ class RegisterItemClass extends React.Component {
         };
         this.textInput = React.createRef();
 
-        if ("Gender" === this.props.data["key"]) {
+        if ("gender" === this.props.data["key"]) {
             this.props.dataTracker(this.props.data["key"], "male")
         }
     }
 
     clear() {
         // console.log(this.props.data["key"])
-        if (this.props.data["key"] == "Gender") {
+        if (this.props.data["key"] == "gender") {
             return
         }
 
@@ -37,7 +37,7 @@ class RegisterItemClass extends React.Component {
     render() {
 
 
-        if (this.props.data["key"] === "Gender") {
+        if (this.props.data["key"] === "gender") {
             return (
                 <View
                     style={{
@@ -79,7 +79,7 @@ class RegisterItemClass extends React.Component {
                 </View>
             )
 
-        } else if (this.props.data["key"] === "Password") {
+        } else if (this.props.data["key"] === "password") {
             // TODO add a eye icon for controling password presentation
             return (
                 <View
@@ -214,15 +214,21 @@ function RegisterPage({ navigation }) {
             return
         }
         registerDetails["create_wallet"] = true
-        console.log(registerDetails)
 
-        console.log(registerDetails)
+        if(registerDetails["gender"] == "male") {
+            registerDetails["gender"] = 0
+        }
+        else {
+            registerDetails["gender"] = 0
+        }
+        registerDetails["user_type"] = 1
+
 
         service.post(
             "/user/register/",
             registerDetails
         ).then(response => {
-            if (200 === response.data.erroe.code) {
+            if (200 === response.data.error.code) {
                 navigation.navigate("Login")
             }
             else {
@@ -248,7 +254,7 @@ function RegisterPage({ navigation }) {
                         (value) => {
                             return (
                                 <RegisterItemClass
-                                    hidden={value["key"] === "Password" ? true : false}
+                                    hidden={value["key"] === "password" ? true : false}
                                     ref={registerItemRefs[value["key"]]}
 
                                     key={value["key"]}
