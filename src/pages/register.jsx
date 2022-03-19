@@ -215,16 +215,21 @@ function RegisterPage({ navigation }) {
             return
         }
         registerDetails["create_wallet"] = true
-        registerDetails["user_type"] = 1
-        // console.log(registerDetails)
 
-        // console.log(registerDetails)
+        if (registerDetails["gender"] == "male") {
+            registerDetails["gender"] = 0
+        }
+        else {
+            registerDetails["gender"] = 0
+        }
+        registerDetails["user_type"] = 1
+
 
         service.post(
             "/user/register/",
             registerDetails
         ).then(response => {
-            if (200 === response.data.erroe.code) {
+            if (200 === response.data.error.code) {
                 navigation.navigate("Login")
             }
             else {

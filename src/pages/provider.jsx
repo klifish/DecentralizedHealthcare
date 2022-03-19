@@ -136,7 +136,6 @@ function ProviderPage() {
     const retrieveToken = async (token) => {
         try {
             const token = await AsyncStorage.getItem("@token");
-            console.log("weird===" + token)
             return token
         } catch (e) {
             console.log(e)

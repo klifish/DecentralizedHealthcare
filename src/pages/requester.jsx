@@ -302,18 +302,17 @@ function RequesterPage({ navigation }) {
 
         var submitData = { "search_content": searchContent };
         submitData = Object.assign(submitData, selectedPurposeStatements)
-
+        console.log(submitData)
         retrieveToken().then((tok) => {
             var token = tok
             service.defaults.headers.common["Authorization"] = "Token " + token;
 
-            service.get(
-                "/contract/all/"
+            service.post(
+                "/contract/search/",
+                submitData
             ).then(response => {
-                console.log(response)
 
                 if (200 === response.data.error.code) {
-                    console.log(response.data.data.contracts)
                     navigation.navigate("Dataset", { data: response.data.data.contracts });
                 }
             }).catch(err => {
@@ -328,7 +327,6 @@ function RequesterPage({ navigation }) {
     const retrieveToken = async (token) => {
         try {
             const token = await AsyncStorage.getItem("@token");
-            console.log("weird===" + token)
             return token
         } catch (e) {
             console.log(e)

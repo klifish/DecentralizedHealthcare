@@ -90,6 +90,8 @@ function LoginPage({ navigation }) {
                     onChangeText={
                         onChangePassword
                     }
+
+                    secureTextEntry={true}
                 />
             </View>
 
