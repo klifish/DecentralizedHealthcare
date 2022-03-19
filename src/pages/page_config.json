@@ -22,7 +22,7 @@
             },
             {
                 "Name": "Open to health, medical or biomedical research and clinical care",
-                "Key": "open_to_health_medical_or_biomedical_research_and_clinical_care",
+                "Key": "open_to_HMB_research",
                 "Abbreviation": "HMB-CC",
                 "Description": "Limited to Health, Medical or Biomedical research, excludes population origin or ancestry study"
             },
@@ -34,7 +34,7 @@
             },
             {
                 "Name": "Open to disease specific research and clinical care",
-                "Key": "open_to_disease_specific_research_and_clinical_care",
+                "Key": "open_to_disease_specific",
                 "Abbreviation": "DS-[XX]-CC",
                 "Description": "Use of the data must be related to a disease"
             }
