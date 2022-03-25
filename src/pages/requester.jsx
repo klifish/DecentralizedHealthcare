@@ -305,6 +305,7 @@ function RequesterPage({ navigation }) {
         console.log(submitData)
         retrieveToken().then((tok) => {
             var token = tok
+
             service.defaults.headers.common["Authorization"] = "Token " + token;
 
             service.post(
@@ -313,7 +314,7 @@ function RequesterPage({ navigation }) {
             ).then(response => {
 
                 if (200 === response.data.error.code) {
-                    navigation.navigate("Dataset", { data: response.data.data.contracts });
+                    navigation.navigate("Dataset", { data: response.data.data.contracts, token:token, searchContent:submitData});
                 }
             }).catch(err => {
                 alert(err)

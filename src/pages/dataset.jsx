@@ -1,4 +1,4 @@
-import { TabRouter } from "@react-navigation/native";
+import { Link, TabRouter } from "@react-navigation/native";
 import React from "react";
 
 import { TouchableOpacity, View, ScrollView, Text } from "react-native";
@@ -6,6 +6,8 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import styles from "../utils/style-sheet";
 import DHButton from "../utils/dh-button";
 import service from "../utils/request";
+import DHModal from '../utils/DHModal';
+
 
 function Dataset(props) {
     const [checkState, onChangeCheckState] = React.useState(false);
@@ -52,7 +54,13 @@ function Dataset(props) {
     )
 }
 
-const PageElements = (props) => {
+function PageElements(props) {
+
+    const [token, setToken]  = React.useState(props.token)
+    const [searchContent, setSearcher] = React.useState(props.searchContent)
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
+    const [link, setLink] = React.useState("")
 
     var multiIsSelected = Object.fromEntries(
         props.data.map(
@@ -62,7 +70,7 @@ const PageElements = (props) => {
 
     var selectedResult = [];
 
-    const retrieveToken = async () => {
+    const retrieveToken = async (token) => {
         try {
             return await AsyncStorage.getItem("@token");
         } catch (e) {
@@ -72,6 +80,12 @@ const PageElements = (props) => {
 
     return (
         <View>
+            <DHModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
+            
             <ScrollView
                 onPress={props.onPress}
             >
@@ -110,24 +124,76 @@ const PageElements = (props) => {
                             return;
                         }
 
-                        var token = retrieveToken();
-                        service.defaults.headers.common["token"] = token;
+                        var submitData = {"general_research_purpose": searchContent["general_research_purpose"], "HMB_research_purpose":searchContent["HMB_research_purpose"],"clinical_purpose":searchContent["clinical_purpose"]}
+                        var addresses = []                        
+                        for (var i = 0; i < selectedResult.length; i++){
+                            console.log(selectedResult[i])
+                            addresses.push(selectedResult[i]["contract_address"])
 
+                        }
+                        submitData["dataset_addresses"] = addresses
+                        console.log(submitData)
+                        service.defaults.headers.common["Authorization"] = "Token " + token;
                         service.post(
-                            "/contract/requestAccess",
-                            selectedResult
+                            "/contract/requestAccess/",
+                            submitData
                         ).then(response => {
-
-                            // todo 
+                            if (200 === response.data.error.code) {
+                                setModalVisible(true)
+                                setModalContent("You were granted access to the data") 
+                            }
+                            else{
+                                setModalVisible(true)
+                                setModalContent(response.data.error.message)
+                            }
                         }).catch(err => {
 
                             alert(err);
                         })
 
+                     
+
                     }
                 }
             ></DHButton>
-        </View>
+            <DHButton
+                title="Get Link"
+                onPress={
+                    () => {
+                        if (0 === selectedResult.length) {
+                            return;
+                        }
+                        if(selectedResult.length > 1){
+                            return;
+                        }
+
+                        var submitData = {"dataset_address":selectedResult[0]["contract_address"]}
+                        service.defaults.headers.common["Authorization"] = "Token " + token;
+                        service.post(
+                            "/contract/getLink/",
+                            submitData
+                        ).then(response => {
+                            if (200 === response.data.error.code) {
+                                setLink(response.data.data["link"])
+                            }
+                            else{
+                                setModalVisible(true)
+                                setModalContent("you do not have permission to access this dataset")
+                            }
+                        }).catch(err => {
+                            setModalVisible(true)
+                            setModalContent("you do not have permission to access this dataset")
+                        })
+
+                     
+
+                    }
+                }
+            ></DHButton>
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '5vh'}}>
+                <a href={link}>{link}</a>        
+            </div>
+            </View>
     );
 }
 
@@ -138,6 +204,8 @@ function DatasetPage({ route }) {
     return (
         <PageElements
             data={paramsFromPreviousPage.data}
+            token={paramsFromPreviousPage.token}
+            searchContent={paramsFromPreviousPage.searchContent}
         />
     );
 }
