@@ -1,17 +1,62 @@
 import React from 'react';
-import { Text, Image, TextInput, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { Modal, Text, Image, TextInput, View, TouchableOpacity, SafeAreaView, Pressable } from 'react-native';
 
+// import { API_URL, API_TOKEN } from "react-native-dotenv";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import Config from 'react-native-config';
 import service from '../utils/request';
 import styles from '../utils/style-sheet';
+import DHButton from '../utils/dh-button';
+import DHModal from '../utils/DHModal';
 
+const emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+const TOKEN_KEY = '@token'
+
+const saveToken = async (token) => {
+    try {
+        await AsyncStorage.setItem(TOKEN_KEY, token);
+    } catch (e) {
+        alert('Failed to save the data to the storage')
+    }
+}
 
 function LoginPage({ navigation }) {
 
-    const [username, onChangeUsername] = React.useState();
-    const [password, onChangePassword] = React.useState();
+    const [username, onChangeUsername] = React.useState("");
+    const [password, onChangePassword] = React.useState("");
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
+    // const [token, save]
+
+    const saveToken = async (token) => {
+        try {
+            await AsyncStorage.setItem("@token", token)
+        } catch (err) {
+            console.log(err)
+        }
+    }
+
+    const retrieveToken = async (token) => {
+        try {
+            const token = await AsyncStorage.getItem("@token");
+            console.log("weird==="+token)
+            return token
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, {
+            justifyContent: 'center',
+        }]}>
+
+            <DHModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
+
             <View style={{
                 alignItems: "center",
                 margin: 12
@@ -19,16 +64,15 @@ function LoginPage({ navigation }) {
                 <Image style={{
                     width: 195,
                     height: 47,
-                }} source={require('../../assets/luce.png')}
+                }}
+                    source={require('../../assets/luce.png')}
                 />
             </View>
 
-
             <View>
-                <TextInput
-                    style={
-                        styles.textInput
-                    }
+                <TextInput style={
+                    styles.textInput
+                }
 
                     placeholder="Username: "
 
@@ -37,90 +81,74 @@ function LoginPage({ navigation }) {
                     }
                 />
 
-                <TextInput
-                    style={
-                        styles.textInput
-                    }
+                <TextInput style={
+                    styles.textInput
+                }
 
                     placeholder="Password:"
 
                     onChangeText={
                         onChangePassword
                     }
-                />
 
+                    secureTextEntry={true}
+                />
             </View>
 
-            <TouchableOpacity
-                style={
-                    styles.touchableOpacityStyle
-                }
+            <DHButton title="Login"
+                onPress={() => {
+                    // Config.API_URL;
+                    // console.log(Config.API_URL)
+                    if (0 === username.length || 0 === password.length) {
+                        setModalVisible(true)
+                        setModalContent("Please type username AND password")
+                        return
+                    }
 
-                onPress={
-                    () => {
+                    if (!emailReg.test(username)) {
+                        setModalVisible(true)
+                        setModalContent("Please type correct username (Email address)")
+                        return
+                    }
 
-                        if (typeof (username) === 'undefined' || typeof (password) === 'undefined') {
-                            alert("Empty username or password")
+                    var loginData = {
+                        "username": username,
+                        "password": password
+                    }
+
+                    service.post(
+                        "/user/login/",
+                        loginData
+                    ).then(response => {
+                        if (200 === response.data.error.code) {
+                            saveToken(response.data.data.token);
+                            retrieveToken().then((tok) => {
+                                console.log("token ==== "+tok)
+                                var token = tok
+                            })
+                            navigation.navigate("What do you want to do?")
+                        } else {
+                            setModalVisible(true)
+                            setModalContent(response.data.error.message)
                             return
                         }
+                    }).catch(error => {
+                        alert(error)
+                    })
+                }}
+            />
 
-                        var loginData = {
-                            "username": username,
-                            "password": password
-                        }
-
-                        service.post(
-                            "/usr/login",
-                            loginData
-                        ).then(response => {
-                            if (200 === response.data.error.code) {
-                                navigation.navigate("Role")
-                            } else {
-                                alert(response.data.error.message)
-
-                            }
-                        }).catch(error => {
-                            console.log("hello world")
-                            console.log(error)
-                            alert(error)
-                        })
-                    }
-                }>
-
-                <Text
-                    style={
-                        {
-                            color: '#fff',
-                            textAlign: "center"
-                        }
-                    }>
-                    Login
-                </Text>
-
-            </TouchableOpacity>
-
-            <View
-                style={{ alignItems: "flex-end" }}
-            >
-
-                <Text
-                    style={
-                        {
-                            textDecorationLine: "underline",
-                            padding: 10,
-                            margin: 12
-                        }
-                    }
-
-                    onPress={
-                        () => navigation.navigate("Register")
-                    }
+            <View style={{ alignItems: "flex-end" }}>
+                <Text style={{
+                    textDecorationLine: "underline",
+                    padding: 10,
+                    margin: 12
+                }}
+                    onPress={() => navigation.navigate("Register")}
                 >
                     No account? register!
                 </Text>
             </View>
-
-
         </View >
     );
 }

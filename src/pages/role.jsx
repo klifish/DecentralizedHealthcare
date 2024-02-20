@@ -5,62 +5,32 @@ import {
     TouchableOpacity,
     View
 } from "react-native";
+import DHButton from "../utils/dh-button";
 
 import styles from "../utils/style-sheet";
 
-function RolePage(
-    {
-        navigation
-    }
-) {
+function RolePage({ navigation }) {
     return (
-        <View
-            style={
-                styles.container
-            }>
-
-            <TouchableOpacity
-                style={
-                    styles.touchableOpacityStyle
-                }
-
+        <View style={
+            styles.container
+        }>
+            <DHButton
+                title="Upload data"
                 onPress={
                     () => {
-                        navigation.navigate("Provider")
+                        navigation.navigate("Provide dataset")
                     }
-                }>
-
-                <Text
-                    style={
-                        {
-                            color: '#fff',
-                            textAlign: "center"
-                        }
-                    }
-                >
-                    Provide data
-                </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-                style={
-                    styles.touchableOpacityStyle
                 }
-                onPress={
-                    () => navigation.navigate("Requester")
-                }>
+            />
 
-                <Text
-                    style={
-                        {
-                            color: '#fff',
-                            textAlign: "center"
-                        }
+            <DHButton
+                title="Search data"
+                onPress={
+                    () => {
+                        navigation.navigate("Request dataset")
                     }
-                >
-                    Request data
-                </Text>
-            </TouchableOpacity>
+                }
+            />
         </View>
     );
 }

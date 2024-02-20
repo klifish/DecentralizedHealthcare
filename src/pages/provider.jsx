@@ -1,145 +1,208 @@
 import React, { Component } from 'react';
 
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import BouncyCheckbox from "react-native-bouncy-checkbox";
+import { Text, TextInput, TouchableNativeFeedbackComponent, TouchableOpacity, View } from "react-native";
 import service from "../utils/request";
 import styles from "../utils/style-sheet";
+import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import Checkbox from 'expo-checkbox';
+import DHButton from '../utils/dh-button';
+import DHModal from '../utils/DHModal';
 
 const ConsentItem = (props) => {
+    return (
+        <View style={{
+            flexDirection: "row"
+        }}>
+            <View style={{
+                flexDirection: 'row',
+                margin: 12
+            }}>
+                <Checkbox
+                    value={props.state}
+                    disabled={props.disabled}
+                    onValueChange={props.onPress}
+                />
 
-    if (props.visible) {
-        return (
-            <BouncyCheckbox
+                <Text
+                    style={{
+                        marginLeft: 12
+                    }}
+                >
+                    {props.value["Name"]}
+                </Text>
+            </View>
+
+            <Ionicons name="information-circle-outline"
                 style={{
-                    margin: 12,
-                }}
-
-                key={props.value}
-                text={props.value}
-                isChecked={false}
-                textStyle={{
-                    textDecorationLine: "none"
+                    marginVertical: 12,
                 }}
 
                 onPress={
-                    props.onPress
+                    () => {
+                        props.modalControl(true, props.value["Description"])
+                    }
                 }
             />
-        );
-    } else {
-        return null;
-    }
+        </View >
+    );
+
 }
 
 const ConsentItems = (props) => {
 
     var states = Object.fromEntries(
         props.values.map(
-            (value) => ([value, React.useState(true)])
+            (value) => ([value["Key"], React.useState(false)])
         )
     )
 
+    var disabledStates = Object.fromEntries(
+        props.values.map(
+            (value) => ([value["Key"], React.useState(false)])
+        )
+    )
+
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
+    const modalControl = (visible, content) => {
+        setModalVisible(visible)
+        setModalContent(content)
+    }
+
     return (
         <View>
-            {
-                props.values.map(
-                    (value) => {
-                        return (
-                            <ConsentItem
-                                key={value}
-                                value={value}
+            <DHModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
 
-                                visible={states[value][0]}
+            <View>
+                {
+                    props.values.map(
+                        (value) => {
+                            // console.log(value)
+                            return (
+                                <ConsentItem
+                                    modalControl={modalControl}
+                                    key={value["Key"]}
+                                    value={value}
+                                    disabled={disabledStates[value["Key"]][0]}
+                                    state={states[value["Key"]][0]}
 
-                                onPress={
-                                    () => {
+                                    onPress={
+                                        () => {
+                                            // console.log(states)
+                                            var bufferStates = states;
+                                            for (var s in states) {
+                                                if (s != value["Key"]) {
+                                                    bufferStates[s] = states[s][0]
+                                                    disabledStates[s][1](!disabledStates[s][0])
+                                                }
+                                                else {
+                                                    states[s][1](!states[s][0])
 
-                                        var bufferStates = states;
-                                        for (var s in states) {
-                                            if (s != value) {
-                                                states[s][1](!states[s][0])
-                                                bufferStates[s] = !states[s][0]
-                                            } else {
-                                                bufferStates[s] = states[s][0]
-
+                                                    bufferStates[s] = !states[s][0]
+                                                }
                                             }
 
+                                            console.log(bufferStates)
+                                            props.onChange(bufferStates);
                                         }
-
-                                        props.onChange(bufferStates);
-                                        // console.log(bufferStates)
                                     }
-                                }
-                            />
-                        )
-                    }
-                )
-            }
+                                />
+                            )
+                        }
+                    )
+                }
+            </View>
         </View>
+
     )
 }
 
-
-/**
- {   
-    "estimate":false,
-    "description":"ds",
-    "link":"http://link.com",
-    "no_restrictions":false,
-    "open_to_general_research_and_clinical_care":false,
-    "open_to_HMB_research":false,
-    "open_to_population_and_ancestry_research":false,
-    "open_to_disease_specific":false
-}
- */
 function ProviderPage() {
+    const consentStatements = require("./page_config.json").pageConfig.consentStatementItemsPro
 
     const [link, onChangeLink] = React.useState()
-    const [consentStates, onChangeConsentStates] = React.useState({});
+    const [description, onChangeDesc] = React.useState()
 
-    const consentStatements = require("./page_config.json").pageConfig.consentStatementItems
+    const [consentStates, onChangeConsentStates] = React.useState({});
+    const [modalVisible, setModalVisible] = React.useState(false);
+    const [modalContent, setModalContent] = React.useState("");
+
+    const retrieveToken = async (token) => {
+        try {
+            const token = await AsyncStorage.getItem("@token");
+            return token
+        } catch (e) {
+            console.log(e)
+        }
+    }
 
     return (
         <View style={styles.container}>
+            <DHModal
+                modalVisible={modalVisible}
+                setModalVisible={setModalVisible}
+                message={modalContent}
+            />
 
             <TextInput
                 style={styles.textInput}
                 placeholder="Please input a data link"
-                // onChange={onChangeLink}
                 onChangeText={onChangeLink}
             />
 
-            <TouchableOpacity
-                style={styles.touchableOpacityStyle}
+            <TextInput
+                style={styles.textInput}
+                placeholder="Describe your dataset"
+                onChangeText={onChangeDesc}
+            />
 
+            <DHButton
+                title="Upload"
                 onPress={
                     () => {
-                        var buff = { "link": link };
+                        var buff = { "link": link, "description": description };
                         buff = Object.assign(buff, consentStates)
 
-                        service.post(
-                            "/contract/dataUpload/",
-                            buff
-                        ).then(response => {
+                        retrieveToken().then((tok) => {
+                            console.log(tok)
+                            var token = tok
+                            console.log("token:")
+                            console.log(token)
+                            service.defaults.headers.common["Authorization"] = "Token " + token;
 
-                        }).catch(error => {
-
+                            service.post(
+                                "/contract/dataUpload/",
+                                buff
+                            ).then(response => {
+                                if (200 === response.data.error.code) {
+                                    setModalVisible(true)
+                                    setModalContent("Upload data successfully")
+                                } else {
+                                    setModalVisible(true)
+                                    setModalContent(response.data.error.message)
+                                }
+                            }).catch(error => {
+                                alert(error)
+                            })
                         })
+
                     }
                 }
-            >
+            ></DHButton>
 
-                <Text
-                    style={
-                        {
-                            color: '#fff',
-                            textAlign: "center"
-                        }
-                    }
-                >
-                    Upload
-                </Text>
-            </TouchableOpacity>
+            <Text
+                style={{
+                    margin: 12
+                }}
+            >
+                Please choose consent statements:
+            </Text>
 
             <View
                 style={{ flex: 1 }}
@@ -151,7 +214,6 @@ function ProviderPage() {
                     }
                 />
             </View>
-
         </View>
     );
 }
