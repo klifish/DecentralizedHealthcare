@@ -7,7 +7,11 @@ on:
 
 jobs:
   build_and_deploy:
-    runs-on: [ubuntu-latest, macos-14]
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-14]
+        
+    runs-on: ${{ matrix.os }}
 
     steps:
       - uses: actions/checkout@v2
