@@ -163,9 +163,11 @@ function PageElements(props) {
                         if (0 === selectedResult.length) {
                             return;
                         }
-                        if(selectedResult.length > 1){
-                            return;
-                        }
+                        // if(selectedResult.length > 1){
+                        //     return;
+                        // }
+
+                        console.log(selectedResult[0]["contract_address"])
 
                         var submitData = {"dataset_address":selectedResult[0]["contract_address"]}
                         service.defaults.headers.common["Authorization"] = "Token " + token;
