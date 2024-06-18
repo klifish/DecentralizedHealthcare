@@ -2,6 +2,9 @@ import React from "react";
 import { Text, TextInput, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 
+import Web3 from "web3";
+import detectEthereumProvider from "@metamask/detect-provider";
+
 import service from "../utils/request";
 import DHButton from "../utils/dh-button";
 import DHModal from "../utils/DHModal";
@@ -170,7 +173,22 @@ function RegisterPage({ navigation }) {
 
     // console.log(registerDetails)
   }
+  connectWallet = async () => {
+    const provider = await detectEthereumProvider();
 
+    if (provider) {
+      const web3 = new Web3(provider);
+      try {
+        await provider.request({ method: "eth_requestAccounts" });
+        const accounts = await web3.eth.getAccounts();
+        this.setState({ account: accounts[0] });
+      } catch (error) {
+        console.error("User denied account access");
+      }
+    } else {
+      console.error("Please install MetaMask!");
+    }
+  };
   const handlePress = (registerDetails) => {
     console.log(registerDetails);
     if (hasEmptyField(registerDetails)) {
@@ -232,6 +250,7 @@ function RegisterPage({ navigation }) {
           handlePress(registerDetails);
         }}
       />
+      <DHButton title="Connect Wallet" onPress={this.connectWallet} />
     </View>
   );
 }
